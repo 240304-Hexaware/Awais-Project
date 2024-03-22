@@ -1,1 +1,156 @@
-<p>register works!</p>
+<div class="container-fluid p-0 body">
+  <div class="d-flex h-100">
+    <div class="w-50 d-flex justify-content-center align-items-center px-5">
+      <form
+        class="w-75"
+        [formGroup]="this.registerForm"
+        (ngSubmit)="register()"
+      >
+        <div class="mb-5 text-center">
+          <h2>Sign Up</h2>
+        </div>
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            formControlName="name"
+          />
+
+          <div
+            *ngIf="
+              registerForm?.get('name')?.invalid &&
+              registerForm?.get('name')?.touched
+            "
+          >
+            <div
+              *ngIf="registerForm?.get('name')?.hasError('required')"
+              class="form-text"
+            >
+              Name is required
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            formControlName="email"
+          />
+
+          <div
+            *ngIf="
+              registerForm?.get('email')?.invalid &&
+              registerForm?.get('email')?.touched
+            "
+          >
+            <div
+              *ngIf="registerForm?.get('email')?.hasError('required')"
+              class="form-text"
+            >
+              Email is required
+            </div>
+            <div
+              *ngIf="registerForm.get('email')?.errors?.['email']"
+              class="form-text"
+            >
+              Email should be valid
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <label for="password1" class="form-label">New Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password1"
+            formControlName="password"
+          />
+
+          <div
+            *ngIf="
+              registerForm?.get('password')?.invalid &&
+              registerForm?.get('password')?.touched
+            "
+          >
+            <div
+              *ngIf="registerForm?.get('password')?.hasError('required')"
+              class="form-text text-danger"
+            >
+              Password is required
+            </div>
+            <div
+              *ngIf="registerForm.get('password')?.errors?.['minlength']"
+              class="form-text text-danger"
+            >
+              Password must be at least 8 characters long
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <label for="password2" class="form-label">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password2"
+            formControlName="confirmPassword"
+          />
+
+          <div
+            *ngIf="
+              registerForm?.get('confirmPassword')?.invalid &&
+                registerForm?.get('confirmPassword')?.touched;
+              else mismatch
+            "
+          >
+            <div
+              *ngIf="registerForm?.get('confirmPassword')?.hasError('required')"
+              class="form-text text-danger"
+            >
+              Password is required
+            </div>
+            <div
+              *ngIf="registerForm.get('confirmPassword')?.errors?.['minlength']"
+              class="form-text text-danger"
+            >
+              Password must be at least 8 characters long
+            </div>
+          </div>
+
+          <ng-template #mismatch id="mismatch">
+            <div
+              *ngIf="
+                registerForm?.get('confirmPassword')?.touched &&
+                !!registerForm?.get('password')?.value.length &&
+                registerForm?.get('confirmPassword')?.value !==
+                  registerForm?.get('password')?.value
+              "
+              class="form-text text-danger"
+            >
+              Password mismatched
+            </div>
+          </ng-template>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+
+        <div class="mt-5 text-center">
+          <p>
+            Already have a account?
+            <a routerLink="/login" class="text-primary link">Sign In</a>
+          </p>
+        </div>
+      </form>
+    </div>
+    <div class="w-50">
+      <img class="w-100 h-100" src="../../../assets/Data Parser.jpeg" />
+    </div>
+  </div>
+</div>
