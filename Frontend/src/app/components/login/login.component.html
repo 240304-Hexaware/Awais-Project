@@ -1,46 +1,96 @@
-<div class="container-fluid body">
+<div class="container-fluid p-0 body">
   <div class="d-flex h-100">
     <div class="w-50 d-flex justify-content-center align-items-center px-5">
-      <form class="w-75" onsubmit="alert('OK')">
+      <form class="w-75" [formGroup]="this.loginForm" (ngSubmit)="login()">
         <div class="mb-5 text-center">
           <h2>Sign In</h2>
         </div>
 
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label"
-            >Email address</label
-          >
+          <label for="email" class="form-label">Email address</label>
           <input
             type="email"
             class="form-control"
-            id="exampleInputEmail1"
+            id="email"
             aria-describedby="emailHelp"
+            formControlName="email"
           />
-          <div id="emailHelp" class="form-text">
-            We'll never share your email with anyone else.
+
+          <div
+            *ngIf="
+              loginForm?.get('email')?.invalid &&
+                loginForm?.get('email')?.touched;
+              else emailHelp
+            "
+          >
+            <div
+              *ngIf="loginForm?.get('email')?.hasError('required')"
+              class="form-text"
+            >
+              Email is required
+            </div>
+            <div
+              *ngIf="loginForm.get('email')?.errors?.['email']"
+              class="form-text"
+            >
+              Email should be valid
+            </div>
           </div>
+
+          <ng-template #emailHelp id="emailHelp">
+            <div class="form-text">
+              We'll never share your email with anyone else.
+            </div>
+          </ng-template>
         </div>
 
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
+        <div class="mb-2">
+          <label for="password" class="form-label">Password</label>
           <input
             type="password"
             class="form-control"
-            id="exampleInputPassword1"
+            id="password"
+            formControlName="password"
           />
+          <div
+            *ngIf="
+              loginForm?.get('password')?.invalid &&
+              loginForm?.get('password')?.touched
+            "
+          >
+            <div
+              *ngIf="loginForm?.get('password')?.hasError('required')"
+              class="form-text text-danger"
+            >
+              Password is required
+            </div>
+            <div
+              *ngIf="loginForm.get('password')?.errors?.['minlength']"
+              class="form-text text-danger"
+            >
+              Password must be at least 8 characters long
+            </div>
+          </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-5 text-end">
           <a class="form-text text-primary link">Forgot Password ?</a>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">Submit</button>
 
         <div class="mt-5 text-center">
-          <p>Not a Member yet? <a class="text-primary link">Sign Up</a></p>
+          <p>
+            Not a Member yet?
+            <a routerLink="/register" class="text-primary link">Sign Up</a>
+          </p>
         </div>
       </form>
+
+      <button (click)="check()">test</button>
     </div>
-    <div class="w-50">col2</div>
+    <div class="w-50">
+      <img class="w-100 h-100" src="../../../assets/Data Parser.jpeg" />
+    </div>
   </div>
 </div>
