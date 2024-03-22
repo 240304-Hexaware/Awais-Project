@@ -1,5 +1,8 @@
 package com.Parser.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,9 +28,9 @@ public class AdminController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String admin() {
+    public ResponseEntity<Object> admin() {
 
-        return "Admin Access";
+        return ResponseHandler.generateMessage("adwa", HttpStatus.OK);
     }
 
     @PostMapping("/promote/{id}")
