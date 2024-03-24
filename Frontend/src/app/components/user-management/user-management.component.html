@@ -1,0 +1,56 @@
+<app-navbar></app-navbar>
+<div class="body pt-5">
+  <div class="container-xxl">
+    <div class="d-flex justify-content-between">
+      <h3>User List</h3>
+      <button type="button" class="btn btn-primary">Create</button>
+    </div>
+    <div class="mt-5">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col" (click)="onSort('id')">#</th>
+            <th scope="col" (click)="onSort('name')">Name</th>
+            <th scope="col" (click)="onSort('email')">Email</th>
+            <th scope="col" (click)="onSort('roles')">Roles</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-user [ngForOf]="users" let-i="index">
+            <tr>
+              <td scope="row">{{ parseId(user?.id) }}</td>
+              <td>
+                {{ user.name }}
+              </td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.roles }}</td>
+              <td>{{ user.blocked }}</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+
+      <div class="d-flex justify-content-between p-2">
+        <ngb-pagination
+          [collectionSize]="this.page.content"
+          [(page)]="this.page.pageNumber"
+          [pageSize]="this.page.pageSize"
+          (pageChange)="this.fetchData()"
+        >
+        </ngb-pagination>
+
+        <select
+          class="form-select"
+          style="width: auto"
+          [(ngModel)]="this.page.pageSize"
+          (ngModelChange)="this.fetchData()"
+        >
+          <option [ngValue]="2">2 items per page</option>
+          <option [ngValue]="4">4 items per page</option>
+          <option [ngValue]="6">6 items per page</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

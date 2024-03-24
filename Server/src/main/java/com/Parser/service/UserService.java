@@ -1,11 +1,16 @@
 package com.Parser.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.Parser.dto.UserDTO;
 import com.Parser.entity.UserInfo;
 import com.Parser.exceptions.MongoDbException;
 import com.Parser.exceptions.UserExistException;
@@ -26,6 +31,14 @@ public class UserService {
     public UserService(UserInfoRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
         this.encoder = encoder;
+    }
+
+    public Optional<List<UserDTO>> getAllMapFields() {
+        return repository.findAllExcludePasswordField();
+    }
+
+    public Page<UserInfo> getAllByPage(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Object addUser(UserInfo userInfo) throws MongoDbException, UserExistException, UserInvalidException {

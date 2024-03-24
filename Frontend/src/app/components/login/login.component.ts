@@ -32,11 +32,13 @@ export class LoginComponent implements OnInit {
 
   check() {
     this.userService.adminControl();
+    // this.userService.getUsers(0, 5, 'id', 'ASC').subscribe((response) => {
+    //   console.log(response);
+    // });
   }
 
   login() {
     if (this.loginForm && this.loginForm.valid) {
-      console.log(this.loginForm.value);
       this.userService.loginRequest(this.loginForm.value);
     } else {
       console.log('Form is invalid');
