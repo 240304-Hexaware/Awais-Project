@@ -1,1 +1,238 @@
 <app-navbar></app-navbar>
+<div class="body pt-5">
+  <div class="container-xxl">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <button ngbNavLink>Parsed Data</button>
+        <ng-template ngbNavContent>
+          <div class="mt-5">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" (click)="onSortRecords('id')">#</th>
+                  <th scope="col" (click)="onSortRecords('name')">
+                    Description
+                  </th>
+                  <th scope="col" (click)="onSortRecords('email')">Priotiry</th>
+                  <th scope="col" (click)="onSortRecords('roles')">Due Date</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-template
+                  ngFor
+                  let-record
+                  [ngForOf]="this.records"
+                  let-i="index"
+                >
+                  <tr>
+                    <td scope="row">{{ record.taskID }}</td>
+                    <td>
+                      {{ record.description }}
+                    </td>
+                    <td>{{ record.priority }}</td>
+                    <td>{{ record.dueDate }}</td>
+                    <td>Action</td>
+                  </tr>
+                </ng-template>
+              </tbody>
+            </table>
+
+            <div class="d-flex justify-content-between p-2">
+              <ngb-pagination
+                [collectionSize]="this.recordPage.content"
+                [(page)]="this.recordPage.pageNumber"
+                [pageSize]="this.recordPage.pageSize"
+                (pageChange)="this.fetchRecords()"
+              >
+              </ngb-pagination>
+
+              <select
+                class="form-select"
+                style="width: auto"
+                [(ngModel)]="this.recordPage.pageSize"
+                (ngModelChange)="this.fetchRecords()"
+              >
+                <option [ngValue]="2">2 items per page</option>
+                <option [ngValue]="4">4 items per page</option>
+                <option [ngValue]="6">6 items per page</option>
+              </select>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <button ngbNavLink>Parse File</button>
+        <ng-template ngbNavContent>
+          <div class="mt-5">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" (click)="onSortParseFiles('id')">#</th>
+                  <th scope="col" (click)="onSortParseFiles('filename')">
+                    File Name
+                  </th>
+                  <th scope="col" (click)="onSortParseFiles('filePath')">
+                    File Path
+                  </th>
+                  <th scope="col" (click)="onSortParseFiles('roles')">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-template
+                  ngFor
+                  let-file
+                  [ngForOf]="this.parseFiles"
+                  let-i="index"
+                >
+                  <tr>
+                    <td scope="row">{{ i + 1 }}</td>
+                    <td>
+                      {{ file.fileName }}
+                    </td>
+                    <td>{{ file.filePath }}</td>
+                    <td>Action</td>
+                  </tr>
+                </ng-template>
+              </tbody>
+            </table>
+
+            <div class="d-flex justify-content-between p-2">
+              <ngb-pagination
+                [collectionSize]="this.parseFilePage.content"
+                [(page)]="this.parseFilePage.pageNumber"
+                [pageSize]="this.parseFilePage.pageSize"
+                (pageChange)="this.fetchParseFiles()"
+              >
+              </ngb-pagination>
+
+              <select
+                class="form-select"
+                style="width: auto"
+                [(ngModel)]="this.parseFilePage.pageSize"
+                (ngModelChange)="this.fetchParseFiles()"
+              >
+                <option [ngValue]="2">2 items per page</option>
+                <option [ngValue]="4">4 items per page</option>
+                <option [ngValue]="6">6 items per page</option>
+              </select>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="3">
+        <button ngbNavLink>Specification File</button>
+        <ng-template ngbNavContent>
+          <div class="mt-5">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" (click)="onSortSpec('id')">#</th>
+                  <th scope="col" (click)="onSortSpec('filename')">
+                    File Name
+                  </th>
+                  <th scope="col" (click)="onSortSpec('filePath')">
+                    File Path
+                  </th>
+                  <th scope="col" (click)="onSortSpec('roles')">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-template
+                  ngFor
+                  let-spec
+                  [ngForOf]="this.specification"
+                  let-i="index"
+                >
+                  <tr>
+                    <td scope="row">{{ i + 1 }}</td>
+                    <td>
+                      {{ spec.fileName }}
+                    </td>
+                    <td>{{ spec.filePath }}</td>
+                    <td>Action</td>
+                  </tr>
+                </ng-template>
+              </tbody>
+            </table>
+
+            <div class="d-flex justify-content-between p-2">
+              <ngb-pagination
+                [collectionSize]="this.specPage.content"
+                [(page)]="this.specPage.pageNumber"
+                [pageSize]="this.specPage.pageSize"
+                (pageChange)="this.fetchSpecifications()"
+              >
+              </ngb-pagination>
+
+              <select
+                class="form-select"
+                style="width: auto"
+                [(ngModel)]="this.specPage.pageSize"
+                (ngModelChange)="this.fetchSpecifications()"
+              >
+                <option [ngValue]="2">2 items per page</option>
+                <option [ngValue]="4">4 items per page</option>
+                <option [ngValue]="6">6 items per page</option>
+              </select>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+    <div class="mt-5">
+      <!-- <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" (click)="onSort('id')">#</th>
+              <th scope="col" (click)="onSort('name')">Name</th>
+              <th scope="col" (click)="onSort('email')">Email</th>
+              <th scope="col" (click)="onSort('roles')">Roles</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-template ngFor let-user [ngForOf]="users" let-i="index">
+              <tr>
+                <td scope="row">{{ parseId(user?.id) }}</td>
+                <td>
+                  {{ user.name }}
+                </td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles }}</td>
+                <td>{{ user.blocked }}</td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </table> -->
+
+      <!-- <div class="d-flex justify-content-between p-2">
+          <ngb-pagination
+            [collectionSize]="this.page.content"
+            [(page)]="this.page.pageNumber"
+            [pageSize]="this.page.pageSize"
+            (pageChange)="this.fetchData()"
+          >
+          </ngb-pagination>
+  
+          <select
+            class="form-select"
+            style="width: auto"
+            [(ngModel)]="this.page.pageSize"
+            (ngModelChange)="this.fetchData()"
+          >
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div> -->
+    </div>
+  </div>
+</div>

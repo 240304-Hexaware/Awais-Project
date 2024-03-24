@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Parser.entity.ParseFile;
 import com.Parser.entity.Specification;
 import com.Parser.repository.SpecificationRepository;
 
@@ -30,6 +33,10 @@ public class SpecificationService {
         this.repository = repository;
     }
 
+    public Page<Specification> getSpecFiles(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
     public Specification insert(Specification specification) {
         return repository.insert(specification);
     }
@@ -37,7 +44,6 @@ public class SpecificationService {
     public Specification update(Specification specification) {
         return repository.save(specification);
     }
-
 
     public Specification findById(String id) {
         return this.repository.findById(id).orElse(null);

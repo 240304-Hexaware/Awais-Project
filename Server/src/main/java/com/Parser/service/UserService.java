@@ -37,8 +37,8 @@ public class UserService {
         return repository.findAllExcludePasswordField();
     }
 
-    public Page<UserInfo> getAllByPage(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<UserDTO> getAllByPage(Pageable pageable) {
+        return repository.findUsersWithoutPassword(pageable);
     }
 
     public Object addUser(UserInfo userInfo) throws MongoDbException, UserExistException, UserInvalidException {

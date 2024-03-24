@@ -3,6 +3,8 @@ package com.Parser.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +19,7 @@ public interface UserInfoRepository extends MongoRepository<UserInfo, String> {
 
     @Query(value = "{}", fields = "{ 'password' : 0 }")
     Optional<List<UserDTO>> findAllExcludePasswordField();
+
+    @Query(value = "{}", fields = "{ 'password' : 0 }")
+    Page<UserDTO> findUsersWithoutPassword(Pageable pageable);
 }
