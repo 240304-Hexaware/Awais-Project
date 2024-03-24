@@ -27,7 +27,7 @@ public class ResponseHandler {
 
     public static ResponseEntity<Object> tokenResponse(String token) {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("token", "Bearer: " + token);
+        map.put("token", "Bearer " + token);
 
         return new ResponseEntity<Object>(map, HttpStatus.OK);
     }

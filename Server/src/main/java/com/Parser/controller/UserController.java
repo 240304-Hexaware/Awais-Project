@@ -24,38 +24,41 @@ import com.Parser.service.UserService;
 public class UserController {
 
     // @Autowired
-    private UserService registrationService;
-    private UserInfoRepository userInfoRepository;
+    private UserService userService;
 
-    public UserController(UserService registrationService, UserInfoRepository userInfoRepository) {
-        this.registrationService = registrationService;
-        this.userInfoRepository = userInfoRepository;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
 
     }
 
     @GetMapping("/welcome")
-    public @ResponseBody ResponseEntity<String> welcome() {
-        return ResponseEntity.ok().body("Welcome this endpoint is not secure");
+    public @ResponseBody ResponseEntity<Object> welcome() {
+
+        return ResponseHandler.generateMessage("Welcome this endpoint is not secure", HttpStatus.OK);
+
+    }
+
+    @PostMapping("user/register")
+    public @ResponseBody ResponseEntity<Object> addNewUser(@RequestBody(required = true) UserInfo userInfo) {
+        return ResponseHandler.generateResponse("User Added", HttpStatus.CREATED,
+        userService.addUser(userInfo));
     }
 
     @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public @ResponseBody ResponseEntity<Object> getAllUsers() {
-        return ResponseHandler.getAll("All Users", HttpStatus.OK, userInfoRepository.findAllExcludePasswordField());
+        return ResponseHandler.getAll("All Users", HttpStatus.OK, userService.getAllMapFields());
     }
 
     @GetMapping("/users/page")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public @ResponseBody ResponseEntity<Object> getAllUsersByPage(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sort,
             @RequestParam(defaultValue = "DESC") Sort.Direction direction) {
 
         Pageable pageable = PageRequest.of(page, size, direction, sort);
-        return ResponseEntity.ok().body(userInfoRepository.findAll(pageable));
-    }
-
-    @PostMapping("user/register")
-    public @ResponseBody ResponseEntity<Object> addNewUser(@RequestBody(required = true) UserInfo userInfo) {
-        return ResponseHandler.generateResponse("User Added", HttpStatus.CREATED,
-                registrationService.addUser(userInfo));
+        return ResponseEntity.ok().body(userService.getAllByPage(pageable));
     }
 }

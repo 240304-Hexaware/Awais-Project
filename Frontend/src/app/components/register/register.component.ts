@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'app-register',
@@ -38,7 +39,17 @@ export class RegisterComponent {
   register() {
     if (this.registerForm && this.registerForm.valid) {
       // Form is valid, do something
-      console.log(this.registerForm.value);
+
+      let user: User = {
+        id: null,
+        name: this.registerForm.value.name,
+        email: this.registerForm.value.email,
+        password: this.registerForm.value.password,
+        roles: 'ROLE_USER',
+        blocked: false,
+      };
+
+      this.userService.registerRequest(user);
     } else {
       // Form is invalid, display error messages
       console.log('Form is invalid');
