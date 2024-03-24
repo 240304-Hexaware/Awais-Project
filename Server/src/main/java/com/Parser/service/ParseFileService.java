@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +28,10 @@ public class ParseFileService {
 
     public ParseFileService(ParseFileRepository parseFileRepository) {
         this.parseFileRepository = parseFileRepository;
+    }
+
+    public Page<ParseFile> getParseFiles(Pageable pageable) {
+        return parseFileRepository.findAll(pageable);
     }
 
     public ParseFile insert(ParseFile parseFile) {

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Document(collection = "specifications")
 public class Specification {
- 
+
     @Id
     private String id;
 
@@ -26,7 +26,7 @@ public class Specification {
 
     @Field("file_path")
     private String filePath;
-    
+
     @Field("parse_files_id")
     private List<String> parseFilesId;
 

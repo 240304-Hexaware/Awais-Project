@@ -2,15 +2,21 @@ import { Component, inject, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { UserService } from '../../services/user.service';
-import { Direction, SortFields, UserPage } from '../../interfaces/user';
+import { UserPage } from '../../interfaces/user';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { Page } from '../../interfaces/page';
+import { Direction, Page, SortFields } from '../../interfaces/page';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [NavbarComponent, DecimalPipe, CommonModule, NgbPaginationModule, FormsModule],
+  imports: [
+    NavbarComponent,
+    DecimalPipe,
+    CommonModule,
+    NgbPaginationModule,
+    FormsModule,
+  ],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
 })
@@ -18,15 +24,15 @@ export class UserManagementComponent implements OnInit {
   users: UserPage[] = [];
   page: Page = {
     content: 0,
-    pageNumber: 0,
+    pageNumber: 1,
     pageSize: 4,
   };
-  usersService: UserService = inject(UserService);
-
   sort: SortFields = {
     field: 'id',
     direction: Direction?.asc,
   };
+
+  constructor(private usersService: UserService) {}
 
   fetchData(): void {
     this.usersService

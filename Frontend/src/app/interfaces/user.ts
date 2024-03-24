@@ -14,13 +14,3 @@ export interface UserPage {
   roles: string;
   blocked: boolean;
 }
-
-export interface SortFields {
-  field: string;
-  direction: Direction;
-}
-
-export enum Direction {
-  asc = 'ASC',
-  desc = 'DESC',
-}

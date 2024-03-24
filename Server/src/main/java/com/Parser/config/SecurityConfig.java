@@ -41,7 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/welcome", "/user/register", "/auth/login").permitAll())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/users/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/admin/**").authenticated())
-                .authorizeHttpRequests(requests -> requests.requestMatchers("/file/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/parse/**").authenticated())
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

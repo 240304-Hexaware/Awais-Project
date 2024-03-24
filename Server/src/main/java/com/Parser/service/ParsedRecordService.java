@@ -10,6 +10,8 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,13 +30,13 @@ public class ParsedRecordService {
     SpecificationService specificationService;
 
     // @Autowired
-    ParsedRecordRepository taskRepository;
+    ParsedRecordRepository recordRepository;
 
     public ParsedRecordService(ParseFileService parseFileService, SpecificationService specificationService,
-            ParsedRecordRepository taskRepository) {
+            ParsedRecordRepository recordRepository) {
         this.parseFileService = parseFileService;
         this.specificationService = specificationService;
-        this.taskRepository = taskRepository;
+        this.recordRepository = recordRepository;
     }
 
     private ParsedRecord parseRecord(String line, JSONObject specification) {
@@ -72,6 +74,18 @@ public class ParsedRecordService {
         return (JSONObject) new JSONParser().parse(buffer);
     }
 
+    public Page<ParsedRecord> getRecords(Pageable pageable) {
+        return recordRepository.findAll(pageable);
+    }
+
+    public Page<ParseFile> getParseFiles(Pageable pageable) {
+        return parseFileService.getParseFiles(pageable);
+    }
+
+    public Page<Specification> getSpecFiles(Pageable pageable) {
+        return specificationService.getSpecFiles(pageable);
+    }
+
     public List<ParsedRecord> uploadTask(MultipartFile specFile, MultipartFile parseFile) {
 
         List<ParsedRecord> tasks = new ArrayList<>();
@@ -94,7 +108,7 @@ public class ParsedRecordService {
             System.out.println(e.toString());
         }
 
-        return taskRepository.insert(tasks);
+        return recordRepository.insert(tasks);
     }
 
     public String uploadFiles(MultipartFile specFile, MultipartFile parseFile) {
@@ -107,6 +121,8 @@ public class ParsedRecordService {
             String specPath = specificationService.getPath();
             String parsePath = parseFileService.getPath();
 
+            System.out.println(specPath);
+            System.out.println(specJson);
             specificationService.writeFile(specFile);
             parseFileService.writeFile(parseFile);
 
