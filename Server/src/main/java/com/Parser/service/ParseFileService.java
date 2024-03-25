@@ -19,7 +19,7 @@ public class ParseFileService {
 
     private final ParseFileRepository parseFileRepository;
 
-     @Value("${file.path.parse}")
+    @Value("${file.path.parse}")
     private String path;
 
     public String getPath() {
@@ -42,8 +42,8 @@ public class ParseFileService {
         return this.parseFileRepository.save(parseFile);
     }
 
-    public void writeFile(MultipartFile file) throws IOException {
-        Path filePath = Paths.get(path, file.getOriginalFilename());
+    public void writeFile(MultipartFile file, String id) throws IOException {
+        Path filePath = Paths.get(path, id + ".txt");
         Files.write(filePath, file.getBytes());
     }
 }

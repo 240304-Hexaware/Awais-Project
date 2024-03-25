@@ -49,8 +49,8 @@ public class SpecificationService {
         return this.repository.findById(id).orElse(null);
     }
 
-    public void writeFile(MultipartFile file) throws IOException {
-        Path filePath = Paths.get(path, file.getOriginalFilename());
+    public void writeFile(MultipartFile file, String id) throws IOException {
+        Path filePath = Paths.get(path, id + ".json");
         Files.write(filePath, file.getBytes());
     }
 }

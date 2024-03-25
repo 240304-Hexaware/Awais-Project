@@ -19,6 +19,9 @@ import com.Parser.exceptions.UserNotFoundException;
 import com.Parser.repository.UserInfoRepository;
 import com.mongodb.MongoException;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
 @Service
 public class UserService {
 
@@ -32,6 +35,14 @@ public class UserService {
         this.repository = repository;
         this.encoder = encoder;
     }
+
+    //  public String getEmailFromToken(String token) {
+    //     Claims claims = Jwts.parser()
+    //             .setSigningKey(SECRET_KEY)
+    //             .parseClaimsJws(token)
+    //             .getBody();
+    //     return claims.getSubject();
+    // }
 
     public Optional<List<UserDTO>> getAllMapFields() {
         return repository.findAllExcludePasswordField();

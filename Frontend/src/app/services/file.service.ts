@@ -4,27 +4,18 @@ import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class SpecificationService {
-
+export class FileService {
   url = 'http://localhost:8080';
-  
+
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getSpecFiles(
-    page: number,
-    size: number,
-    sort: string,
-    direction: string
-  ): Observable<any> {
+  uploadFiles(formData: FormData): Observable<any> {
     const headers = this.authService.createAuthorizationHeader();
 
-    return this.http.get<any>(
-      `${this.url}/parse/spec?page=${page}&size=${size}&sort=${sort}&direction=${direction}`,
-      {
-        headers,
-      }
-    );
+    return this.http.post(`${this.url}/parse/file/upload`, formData, {
+      headers,
+    });
   }
 }

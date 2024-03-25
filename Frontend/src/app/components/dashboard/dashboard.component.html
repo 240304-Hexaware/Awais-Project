@@ -1,8 +1,8 @@
 <app-navbar></app-navbar>
 <div class="body pt-5">
   <div class="container-xxl">
-    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-      <li [ngbNavItem]="1">
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+      <li ngbNavItem>
         <button ngbNavLink>Parsed Data</button>
         <ng-template ngbNavContent>
           <div class="mt-5">
@@ -10,49 +10,107 @@
               <thead>
                 <tr>
                   <th scope="col" (click)="onSortRecords('id')">#</th>
-                  <th scope="col" (click)="onSortRecords('name')">
+                  <th scope="col" (click)="onSortRecords('taskId')">Task ID</th>
+                  <th scope="col" (click)="onSortRecords('description')">
                     Description
                   </th>
-                  <th scope="col" (click)="onSortRecords('email')">Priotiry</th>
+                  <th scope="col" (click)="onSortRecords('priority')">
+                    Priotiry
+                  </th>
                   <th scope="col" (click)="onSortRecords('roles')">Due Date</th>
+
                   <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
-                <ng-template
-                  ngFor
-                  let-record
-                  [ngForOf]="this.records"
-                  let-i="index"
-                >
+                <ng-template ngFor let-record [ngForOf]="this.records" let-i="index">
                   <tr>
-                    <td scope="row">{{ record.taskID }}</td>
+                    <td scope="row">
+                      {{
+                      (this.recordPage.pageNumber - 1) *
+                      this.recordPage.pageSize +
+                      i +
+                      1
+                      }}
+                    </td>
+                    <td>{{ record.taskID }}</td>
                     <td>
                       {{ record.description }}
                     </td>
                     <td>{{ record.priority }}</td>
                     <td>{{ record.dueDate }}</td>
-                    <td>Action</td>
+                    <!-- <td>Action</td> -->
+
+                    <td class="overflow-hidden">
+                      <div ngbDropdown container="body">
+                        <button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>
+                          Actions
+                        </button>
+                        <div ngbDropdownMenu>
+                          <button ngbDropdownItem (click)="openVerticallyCentered(content)">
+                            View
+                          </button>
+                        </div>
+                      </div>
+                    </td>
                   </tr>
+
+                  <!-- Parsed Record Model -->
+                  <ng-template #content let-modal>
+                    <div class="modal-header">
+                      <h4 class="modal-title">{{ record.taskID }}</h4>
+                      <button type="button" class="btn-close" aria-label="Close"
+                        (click)="modal.dismiss('Cross click')"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>
+                        <span class="fw-bold">Descritpion: </span>{{ record.description }}
+                      </p>
+                      <p>
+                        <span class="fw-bold">Priority: </span>{{ record.priority }}
+                      </p>
+                      <p>
+                        <span class="fw-bold">Assigned: </span>{{ record.assignee }}
+                      </p>
+                      <p>
+                        <span class="fw-bold">Due Date: </span>{{ record.dueDate }}
+                      </p>
+                      <p>
+                        <span class="fw-bold">Uploaded By: </span>{{ record.user }}
+                      </p>
+                      <div>
+                        <span class="fw-bold">Parse File: </span><a [href]="
+                            'http://localhost:8080/download/parse/file?filename=' +
+                            record.parseFileId +
+                            '.txt'
+                          " [download]="record.parseFileName + '.txt'">{{ record.parseFileName }}</a>
+                      </div>
+                      <div>
+                        <span class="fw-bold">Specification File: </span><a [href]="
+                            'http://localhost:8080/download/spec/file?filename=' +
+                            record.specificationId +
+                            '.json'
+                          " [download]="record.specificationName + '.json'">{{ record.specificationName }}</a>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
+                        Close
+                      </button>
+                    </div>
+                  </ng-template>
+                  <!-- End of Model -->
                 </ng-template>
               </tbody>
             </table>
 
             <div class="d-flex justify-content-between p-2">
-              <ngb-pagination
-                [collectionSize]="this.recordPage.content"
-                [(page)]="this.recordPage.pageNumber"
-                [pageSize]="this.recordPage.pageSize"
-                (pageChange)="this.fetchRecords()"
-              >
+              <ngb-pagination [collectionSize]="this.recordPage.content" [(page)]="this.recordPage.pageNumber"
+                [pageSize]="this.recordPage.pageSize" (pageChange)="this.fetchRecords()">
               </ngb-pagination>
 
-              <select
-                class="form-select"
-                style="width: auto"
-                [(ngModel)]="this.recordPage.pageSize"
-                (ngModelChange)="this.fetchRecords()"
-              >
+              <select class="form-select" style="width: auto" [(ngModel)]="this.recordPage.pageSize"
+                (ngModelChange)="this.fetchRecords()">
                 <option [ngValue]="2">2 items per page</option>
                 <option [ngValue]="4">4 items per page</option>
                 <option [ngValue]="6">6 items per page</option>
@@ -61,7 +119,8 @@
           </div>
         </ng-template>
       </li>
-      <li [ngbNavItem]="2">
+
+      <li ngbNavItem>
         <button ngbNavLink>Parse File</button>
         <ng-template ngbNavContent>
           <div class="mt-5">
@@ -72,48 +131,87 @@
                   <th scope="col" (click)="onSortParseFiles('filename')">
                     File Name
                   </th>
-                  <th scope="col" (click)="onSortParseFiles('filePath')">
-                    File Path
+                  <th scope="col" (click)="onSortParseFiles('user')">
+                    Uploaded By
                   </th>
-                  <th scope="col" (click)="onSortParseFiles('roles')">
-                    Action
+                  <th scope="col" (click)="onSortParseFiles('specificationId')">
+                    Specification File
                   </th>
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
-                <ng-template
-                  ngFor
-                  let-file
-                  [ngForOf]="this.parseFiles"
-                  let-i="index"
-                >
+                <ng-template ngFor let-file [ngForOf]="this.parseFiles" let-i="index">
                   <tr>
-                    <td scope="row">{{ i + 1 }}</td>
+                    <td scope="row">
+                      {{
+                      (this.parseFilePage.pageNumber - 1) *
+                      this.parseFilePage.pageSize +
+                      i +
+                      1
+                      }}
+                    </td>
                     <td>
                       {{ file.fileName }}
                     </td>
-                    <td>{{ file.filePath }}</td>
-                    <td>Action</td>
+                    <td>{{ file.user }}</td>
+                    <td>{{ file.specificationName }}</td>
+                    <td class="overflow-hidden">
+                      <div ngbDropdown container="body">
+                        <button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>
+                          Actions
+                        </button>
+                        <div ngbDropdownMenu>
+                          <button ngbDropdownItem (click)="openVerticallyCentered(content)">
+                            View
+                          </button>
+                        </div>
+                      </div>
+                    </td>
                   </tr>
+
+                  <!-- Parsed Record Model -->
+                  <ng-template #content let-modal>
+                    <div class="modal-header">
+                      <h4 class="modal-title">{{ file.fileName }}</h4>
+                      <button type="button" class="btn-close" aria-label="Close"
+                        (click)="modal.dismiss('Cross click')"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>
+                        <span class="fw-bold">Uploaded By: </span>{{ file.user }}
+                      </p>
+                      <div>
+                        <span class="fw-bold">Specification File: </span><a [href]="
+                            'http://localhost:8080/download/spec/file?filename=' +
+                            file.specificationId +
+                            '.json'
+                          " [download]="file.specificationName + '.json'">{{ file.specificationName }}</a>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
+                        Close
+                      </button>
+                      <a class="btn btn-primary" [href]="
+                          'http://localhost:8080/download/parse/file?filename=' +
+                          file.id +
+                          '.txt'
+                        " [download]="file.fileName + '.txt'">Download</a>
+                    </div>
+                  </ng-template>
+                  <!-- End of Model -->
                 </ng-template>
               </tbody>
             </table>
 
             <div class="d-flex justify-content-between p-2">
-              <ngb-pagination
-                [collectionSize]="this.parseFilePage.content"
-                [(page)]="this.parseFilePage.pageNumber"
-                [pageSize]="this.parseFilePage.pageSize"
-                (pageChange)="this.fetchParseFiles()"
-              >
+              <ngb-pagination [collectionSize]="this.parseFilePage.content" [(page)]="this.parseFilePage.pageNumber"
+                [pageSize]="this.parseFilePage.pageSize" (pageChange)="this.fetchParseFiles()">
               </ngb-pagination>
 
-              <select
-                class="form-select"
-                style="width: auto"
-                [(ngModel)]="this.parseFilePage.pageSize"
-                (ngModelChange)="this.fetchParseFiles()"
-              >
+              <select class="form-select" style="width: auto" [(ngModel)]="this.parseFilePage.pageSize"
+                (ngModelChange)="this.fetchParseFiles()">
                 <option [ngValue]="2">2 items per page</option>
                 <option [ngValue]="4">4 items per page</option>
                 <option [ngValue]="6">6 items per page</option>
@@ -122,7 +220,8 @@
           </div>
         </ng-template>
       </li>
-      <li [ngbNavItem]="3">
+
+      <li ngbNavItem>
         <button ngbNavLink>Specification File</button>
         <ng-template ngbNavContent>
           <div class="mt-5">
@@ -133,48 +232,96 @@
                   <th scope="col" (click)="onSortSpec('filename')">
                     File Name
                   </th>
-                  <th scope="col" (click)="onSortSpec('filePath')">
-                    File Path
+                  <th scope="col" (click)="onSortSpec('user')">Uploaded By</th>
+                  <th scope="col" (click)="onSortSpec('parseFilesId')">
+                    Number of Parse Files
                   </th>
-                  <th scope="col" (click)="onSortSpec('roles')">
-                    Action
-                  </th>
+                  <th scope="col" (click)="onSortSpec('roles')">Action</th>
                 </tr>
               </thead>
               <tbody>
-                <ng-template
-                  ngFor
-                  let-spec
-                  [ngForOf]="this.specification"
-                  let-i="index"
-                >
+                <ng-template ngFor let-spec [ngForOf]="this.specification" let-i="index">
                   <tr>
-                    <td scope="row">{{ i + 1 }}</td>
+                    <td scope="row">
+                      {{
+                      (this.specPage.pageNumber - 1) *
+                      this.specPage.pageSize +
+                      i +
+                      1
+                      }}
+                    </td>
                     <td>
                       {{ spec.fileName }}
                     </td>
-                    <td>{{ spec.filePath }}</td>
-                    <td>Action</td>
+                    <td>{{ spec.user }}</td>
+                    <td>{{ spec.parseFiles.length }}</td>
+
+                    <td class="overflow-hidden">
+                      <div ngbDropdown container="body">
+                        <button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>
+                          Actions
+                        </button>
+                        <div ngbDropdownMenu>
+                          <button ngbDropdownItem (click)="openVerticallyCentered(content)">
+                            View
+                          </button>
+                        </div>
+                      </div>
+                    </td>
                   </tr>
+
+                  <!-- Parsed Record Model -->
+                  <ng-template #content let-modal>
+                    <div class="modal-header">
+                      <h4 class="modal-title">{{ spec.fileName }}</h4>
+                      <button type="button" class="btn-close" aria-label="Close"
+                        (click)="modal.dismiss('Cross click')"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="formatted-json">
+                        <pre>{{ this.beautifyJSON(spec.json) }}</pre>
+                      </div>
+                      <hr />
+                      <p>
+                        <span class="fw-bold">Uploaded By: </span>{{ spec.user }}
+                      </p>
+
+                      <h5 class="fw-bold">Parse Files:</h5>
+                      <ol>
+                        <ng-template ngFor let-parseFile [ngForOf]="spec.parseFiles" let-i="index">
+                          <li>
+                            <a [href]="
+                                'http://localhost:8080/download/parse/file?filename=' +
+                                parseFile.parseFileId +
+                                '.txt'
+                              " [download]="parseFile.parseFileName + '.txt'">{{ parseFile.parseFileName }}</a>
+                          </li>
+                        </ng-template>
+                      </ol>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
+                        Close
+                      </button>
+                      <a class="btn btn-primary" [href]="
+                          'http://localhost:8080/download/spec/file?filename=' +
+                          spec.id +
+                          '.json'
+                        " [download]="spec.fileName + '.json'">Download</a>
+                    </div>
+                  </ng-template>
+                  <!-- End of Model -->
                 </ng-template>
               </tbody>
             </table>
 
             <div class="d-flex justify-content-between p-2">
-              <ngb-pagination
-                [collectionSize]="this.specPage.content"
-                [(page)]="this.specPage.pageNumber"
-                [pageSize]="this.specPage.pageSize"
-                (pageChange)="this.fetchSpecifications()"
-              >
+              <ngb-pagination [collectionSize]="this.specPage.content" [(page)]="this.specPage.pageNumber"
+                [pageSize]="this.specPage.pageSize" (pageChange)="this.fetchSpecifications()">
               </ngb-pagination>
 
-              <select
-                class="form-select"
-                style="width: auto"
-                [(ngModel)]="this.specPage.pageSize"
-                (ngModelChange)="this.fetchSpecifications()"
-              >
+              <select class="form-select" style="width: auto" [(ngModel)]="this.specPage.pageSize"
+                (ngModelChange)="this.fetchSpecifications()">
                 <option [ngValue]="2">2 items per page</option>
                 <option [ngValue]="4">4 items per page</option>
                 <option [ngValue]="6">6 items per page</option>
@@ -183,56 +330,46 @@
           </div>
         </ng-template>
       </li>
+
+      <li class="ms-auto py-1 px-3">
+        <button class="btn btn-primary" (click)="openVerticallyCentered(formFiles)">
+          Add File
+        </button>
+      </li>
+
+      <!-- Parsed Record Model -->
+      <ng-template #formFiles let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Upload Files</h4>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+
+        <form (ngSubmit)="onSubmit()">
+          <div class="modal-body">
+
+            <div class="mb-3">
+              <label for="parseFile" class="form-label">Parse File</label>
+              <input class="form-control" (change)="onParseFile($event)" type="file" id="parseFile" accept=".txt" />
+            </div>
+
+            <div class="mb-3">
+              <label for="specFile" class="form-label">Specification File</label>
+              <input class="form-control" (change)="onSpecFile($event)" type="file" id="specFile" accept=".json" />
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary" (click)="modal.close('Close click')">Submit</button>
+
+          </div>
+        </form>
+      </ng-template>
+      <!-- End of Model -->
     </ul>
 
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
-
-    <div class="mt-5">
-      <!-- <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col" (click)="onSort('id')">#</th>
-              <th scope="col" (click)="onSort('name')">Name</th>
-              <th scope="col" (click)="onSort('email')">Email</th>
-              <th scope="col" (click)="onSort('roles')">Roles</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-template ngFor let-user [ngForOf]="users" let-i="index">
-              <tr>
-                <td scope="row">{{ parseId(user?.id) }}</td>
-                <td>
-                  {{ user.name }}
-                </td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.roles }}</td>
-                <td>{{ user.blocked }}</td>
-              </tr>
-            </ng-template>
-          </tbody>
-        </table> -->
-
-      <!-- <div class="d-flex justify-content-between p-2">
-          <ngb-pagination
-            [collectionSize]="this.page.content"
-            [(page)]="this.page.pageNumber"
-            [pageSize]="this.page.pageSize"
-            (pageChange)="this.fetchData()"
-          >
-          </ngb-pagination>
-  
-          <select
-            class="form-select"
-            style="width: auto"
-            [(ngModel)]="this.page.pageSize"
-            (ngModelChange)="this.fetchData()"
-          >
-            <option [ngValue]="2">2 items per page</option>
-            <option [ngValue]="4">4 items per page</option>
-            <option [ngValue]="6">6 items per page</option>
-          </select>
-        </div> -->
-    </div>
   </div>
 </div>

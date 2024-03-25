@@ -18,8 +18,10 @@ public class ParseFile {
     private String id;
     @Field("file_name")
     private String fileName;
-    @Field("file_path")
-    private String filePath;
+    @Field("user")
+    private String user;
+    @Field("specification_name")
+    private String specificationName;
     @Field("specification_id")
     private String specificationId;
 
