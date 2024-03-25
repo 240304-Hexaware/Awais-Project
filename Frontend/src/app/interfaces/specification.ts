@@ -1,7 +1,12 @@
 export interface Specification {
   id: string;
   fileName: string;
-  filePath: string;
-  json: String;
-  parseFilesId: string[];
+  json: string;
+  parseFiles: ParseFile[];
+  user: string;
+}
+
+export interface ParseFile {
+  parseFileName: string;
+  parseFileId: string;
 }

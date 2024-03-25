@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,8 +41,17 @@ public class ParsedRecordService {
         this.recordRepository = recordRepository;
     }
 
-    private ParsedRecord parseRecord(String line, JSONObject specification) {
+    private ParsedRecord parseRecord(String line, JSONObject specification, String user, String parseFileName,
+            String parseFileId,
+            String specFileName,
+            String specFileId) {
         ParsedRecord task = new ParsedRecord();
+
+        task.setUser(user);
+        task.setParseFileName(parseFileName);
+        task.setParseFileId(parseFileId);
+        task.setSpecificationName(specFileName);
+        task.setSpecificationId(specFileId);
 
         for (Object key : specification.keySet()) {
 
@@ -86,89 +97,105 @@ public class ParsedRecordService {
         return specificationService.getSpecFiles(pageable);
     }
 
-    public List<ParsedRecord> uploadTask(MultipartFile specFile, MultipartFile parseFile) {
+    // public List<ParsedRecord> uploadTask(MultipartFile specFile, MultipartFile
+    // parseFile) {
+    // List<ParsedRecord> tasks = new ArrayList<>();
+    // try {
+    // JSONObject specification = fileToJson(specFile);
+    // BufferedReader buffer = getFileBuffer(parseFile);
+    // for (String line = ""; (line = buffer.readLine()) != null;) {
+    // ParsedRecord task = parseRecord(line, specification);
+    // tasks.add(task);
+    // }
+    // } catch (Exception e) {
+    // System.out.println(e.toString());
+    // }
+    // return recordRepository.insert(tasks);
+    // }
 
-        List<ParsedRecord> tasks = new ArrayList<>();
-
-        try {
-
-            JSONObject specification = fileToJson(specFile);
-
-            BufferedReader buffer = getFileBuffer(parseFile);
-
-            for (String line = ""; (line = buffer.readLine()) != null;) {
-
-                ParsedRecord task = parseRecord(line, specification);
-
-                tasks.add(task);
-            }
-
-        } catch (Exception e) {
-
-            System.out.println(e.toString());
-        }
-
-        return recordRepository.insert(tasks);
-    }
-
-    public String uploadFiles(MultipartFile specFile, MultipartFile parseFile) {
+    public String uploadFiles(MultipartFile specFile, MultipartFile parseFile, String user) {
 
         try {
 
             JSONObject specJson = fileToJson(specFile);
-            List<String> obj = new ArrayList<>();
 
-            String specPath = specificationService.getPath();
-            String parsePath = parseFileService.getPath();
+            List<Map<String, String>> obj = new ArrayList<>();
+            Map<String, String> map = new HashMap<String, String>();
 
-            System.out.println(specPath);
-            System.out.println(specJson);
-            specificationService.writeFile(specFile);
-            parseFileService.writeFile(parseFile);
+            // String specPath = specificationService.getPath();
+            // String parsePath = parseFileService.getPath();
 
-            ParseFile parseFileObj = new ParseFile(null, parseFile.getOriginalFilename(), parsePath, "");
+            ParseFile parseFileObj = new ParseFile(null, parseFile.getOriginalFilename(), user, "", "");
 
             parseFileObj = parseFileService.insert(parseFileObj);
 
-            obj.add(parseFileObj.getId());
+            parseFileService.writeFile(parseFile, parseFileObj.getId());
+
+            map.put("parse_file_Name", parseFileObj.getFileName());
+            map.put("parse_file_id", parseFileObj.getId());
+
+            obj.add(map);
 
             Specification specFileObj = new Specification(null, specFile.getOriginalFilename(), specJson.toJSONString(),
-                    specPath, obj);
+                    user, obj);
 
             specFileObj = specificationService.insert(specFileObj);
+            specificationService.writeFile(specFile, specFileObj.getId());
 
+            parseFileObj.setSpecificationName(specFileObj.getFileName());
             parseFileObj.setSpecificationId(specFileObj.getId());
 
             parseFileService.update(parseFileObj);
+
+            List<ParsedRecord> tasks = new ArrayList<>();
+            BufferedReader buffer = getFileBuffer(parseFile);
+
+            for (String line = ""; (line = buffer.readLine()) != null;) {
+
+                ParsedRecord task = parseRecord(line, specJson, user, parseFileObj.getFileName(), parseFileObj.getId(),
+                        specFileObj.getFileName(), specFileObj.getId());
+
+                tasks.add(task);
+            }
+
+            recordRepository.insert(tasks);
 
         } catch (Exception e) {
             System.out.println(e.toString());
         }
 
-        return "Files Uploaded";
+        return "Files Parsed Successfully";
     }
 
     public String uploadParseFile(MultipartFile parseFile, String specFileId) {
 
         try {
 
-            List<String> obj = new ArrayList<>();
+            List<Map<String, String>> obj = new ArrayList<>();
+            Map<String, String> map = new HashMap<String, String>();
 
-            String parsePath = parseFileService.getPath();
+            // String parsePath = parseFileService.getPath();
 
-            specificationService.writeFile(parseFile);
-
-            ParseFile parseFileObj = new ParseFile(null, parseFile.getOriginalFilename(), parsePath, specFileId);
+            ParseFile parseFileObj = new ParseFile(null, parseFile.getOriginalFilename(), "user",
+                    "", specFileId);
 
             parseFileObj = parseFileService.insert(parseFileObj);
 
-            obj.add(parseFileObj.getId());
+            specificationService.writeFile(parseFile, parseFileObj.getId());
+
+            map.put("parseFileName", parseFileObj.getFileName());
+            map.put("parseFileId", parseFileObj.getId());
+
+            obj.add(map);
 
             Specification specFileObj = this.specificationService.findById(specFileId);
 
-            obj.addAll(specFileObj.getParseFilesId());
+            parseFileObj.setSpecificationName(specFileObj.getFileName());
+            parseFileService.update(parseFileObj);
 
-            specFileObj.setParseFilesId(obj);
+            obj.addAll(specFileObj.getParseFiles());
+
+            specFileObj.setParseFiles(obj);
 
             specificationService.update(specFileObj);
 

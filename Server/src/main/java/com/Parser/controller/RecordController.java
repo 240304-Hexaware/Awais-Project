@@ -1,9 +1,12 @@
 package com.Parser.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,8 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.Parser.entity.ParseFile;
 import com.Parser.entity.ParsedRecord;
 import com.Parser.entity.Specification;
+import com.Parser.service.JwtService;
 import com.Parser.service.ParsedRecordService;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +32,11 @@ public class RecordController {
 
     // @Autowired
     ParsedRecordService fileServices;
+    private JwtService jwtService;
 
-    public RecordController(ParsedRecordService fileServices) {
+    public RecordController(ParsedRecordService fileServices, JwtService jwtService) {
         this.fileServices = fileServices;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("/data")
@@ -63,10 +70,13 @@ public class RecordController {
     }
 
     @PostMapping("/file/upload")
-    public String fileHandler(@RequestParam("specFile") MultipartFile specFile,
+    public String fileHandler(@RequestHeader("Authorization") String token,
+            @RequestParam("specFile") MultipartFile specFile,
             @RequestParam("parseFile") MultipartFile parseFile) {
 
-        return fileServices.uploadFiles(specFile, parseFile);
+                System.out.println("I am in");
+
+        return fileServices.uploadFiles(specFile, parseFile, jwtService.extractEmail(token.split(" ")[1]));
     }
 
     @PostMapping("/file/upload/{id}")
@@ -75,12 +85,14 @@ public class RecordController {
 
         return fileServices.uploadParseFile(parseFile, specFileId);
     }
+    
 
-    @PostMapping("/task")
-    public List<ParsedRecord> taskHandler(@RequestParam("specFile") MultipartFile specFile,
-            @RequestParam("parseFile") MultipartFile parseFile) {
+    // @PostMapping("/task")
+    // public List<ParsedRecord> taskHandler(@RequestParam("specFile") MultipartFile
+    // specFile,
+    // @RequestParam("parseFile") MultipartFile parseFile) {
 
-        return fileServices.uploadTask(specFile, parseFile);
-    }
+    // return fileServices.uploadTask(specFile, parseFile);
+    // }
 
 }

@@ -1,6 +1,7 @@
 package com.Parser.entity;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,12 +23,13 @@ public class Specification {
     @Field("file_name")
     private String fileName;
 
+    @Field("json")
     private String json;
 
-    @Field("file_path")
-    private String filePath;
+    @Field("user")
+    private String user;
 
-    @Field("parse_files_id")
-    private List<String> parseFilesId;
+    @Field("parse_files")
+    private List<Map<String, String>> parseFiles;
 
 }

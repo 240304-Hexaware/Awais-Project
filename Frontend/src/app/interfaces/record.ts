@@ -5,4 +5,9 @@ export interface Record {
   priority: string;
   dueDate: string;
   assignee: string;
+  user: string;
+  parseFileName: string;
+  parseFileId: string;
+  specificationName: string;
+  specificationId: string;
 }

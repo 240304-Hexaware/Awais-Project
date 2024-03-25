@@ -1,6 +1,7 @@
 export interface Parse {
   id: string;
   fileName: string;
-  filePath: string;
+  specificationName: string;
   specificationId: string;
+  user: string;
 }

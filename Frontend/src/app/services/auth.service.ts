@@ -59,7 +59,6 @@ export class AuthService {
     }
 
     return new HttpHeaders({
-      'Content-Type': 'application/json',
       Authorization: `${this.authToken}`,
     });
   }

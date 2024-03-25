@@ -1,15 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewEncapsulation,
+} from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { NgbNavModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDropdownModule,
+  NgbNavModule,
+  NgbPaginationModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { Record } from '../../interfaces/record';
 import { Page } from '../../interfaces/page';
 import { Direction, SortFields } from '../../interfaces/page';
 import { RecordService } from '../../services/record.service';
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Parse } from '../../interfaces/parse';
 import { ParseService } from '../../services/parse.service';
 import { Specification } from '../../interfaces/specification';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SpecificationService } from '../../services/specification.service';
+import { FileService } from '../../services/file.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,16 +38,22 @@ import { Specification } from '../../interfaces/specification';
     CommonModule,
     NgbPaginationModule,
     FormsModule,
+    NgbDropdownModule,
+    ReactiveFormsModule,
   ],
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-  active = 1;
+  fileForm = {
+    parseFile: '',
+    specFile: '',
+  };
 
   records: Record[] = [];
   parseFiles: Parse[] = [];
-  specification: Parse[] = [];
+  specification: Specification[] = [];
 
   recordPage: Page = {
     content: 0,
@@ -63,11 +86,53 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private recordService: RecordService,
-    private parseService: ParseService
+    private parseService: ParseService,
+    private specService: SpecificationService,
+    private modalService: NgbModal,
+    private fileService: FileService
   ) {}
 
   ngOnInit(): void {
     this?.fetchData();
+  }
+
+  onParseFile(event: any): void {
+    const file = event.target.files[0];
+    this.fileForm.parseFile = file;
+  }
+
+  onSpecFile(event: any): void {
+    const file = event.target.files[0];
+    this.fileForm.specFile = file;
+  }
+
+  onSubmit(): void {
+    const formData = new FormData();
+    formData.append('parseFile', this.fileForm.parseFile);
+    formData.append('specFile', this.fileForm.specFile);
+
+    this.fileService.uploadFiles(formData).subscribe({
+      next: (response) => console.log(response),
+      error: (error) => console.log(error),
+      complete: () => console.info('complete'),
+    });
+  }
+
+  openVerticallyCentered(content: TemplateRef<any>) {
+    this.modalService.open(content, { centered: true, scrollable: true });
+  }
+
+  beautifyJSON(inputJSON: string) {
+    let formattedJSON: string = '';
+    try {
+      const parsedJSON = JSON.parse(inputJSON);
+      formattedJSON = JSON.stringify(parsedJSON, null, 2);
+    } catch (error) {
+      console.error('Invalid JSON:', error);
+      formattedJSON = 'Invalid JSON';
+    }
+
+    return formattedJSON;
   }
 
   fetchRecords(): void {
@@ -90,6 +155,11 @@ export class DashboardComponent implements OnInit {
             priority: record?.priority,
             dueDate: record?.dueDate,
             assignee: record?.assignee,
+            user: record?.user,
+            parseFileName: record?.parseFileName,
+            parseFileId: record?.parseFileId,
+            specificationName: record?.specificationName,
+            specificationId: record?.specificationId,
           }));
         },
         error: (error) => console.error(error),
@@ -113,8 +183,9 @@ export class DashboardComponent implements OnInit {
           this.parseFiles = response?.content?.map((file: Parse) => ({
             id: file?.id,
             fileName: file?.fileName,
-            filePath: file?.filePath,
+            specificationName: file?.specificationName,
             specificationId: file?.specificationId,
+            user: file?.user,
           }));
         },
         error: (error) => console.error(error),
@@ -123,8 +194,8 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchSpecifications(): void {
-    this.parseService
-      .getParseFiles(
+    this.specService
+      .getSpecFiles(
         this.specPage.pageNumber - 1,
         this.specPage.pageSize,
         this.sortSpec?.field,
@@ -135,14 +206,19 @@ export class DashboardComponent implements OnInit {
           console.log(response);
           this.specPage.content = response?.totalElements;
 
-          this.specification = response?.content?.map(
-            (spec: Specification) => ({
+          this.specification = response?.content?.map((spec: Specification) => {
+            console.log(spec);
+            return {
               id: spec?.id,
               fileName: spec?.fileName,
-              filePath: spec?.filePath,
-              parseFilesId: spec?.parseFilesId,
-            })
-          );
+              parseFiles: spec?.parseFiles?.map((parseFiles: any) => ({
+                parseFileName: parseFiles?.parse_file_Name,
+                parseFileId: parseFiles?.parse_file_id,
+              })),
+              json: spec?.json,
+              user: spec?.user,
+            };
+          });
         },
         error: (error) => console.error(error),
         complete: () => console.info('complete'),
