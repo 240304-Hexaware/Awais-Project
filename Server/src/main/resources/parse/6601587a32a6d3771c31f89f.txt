@@ -1,3 +1,0 @@
-TID0000001  Code Refactor               HIGH      2024-03-09  John Doe          
-TID0000002  Bug Fix                     MEDIUM    2024-03-10  Alice Smith       
-TID0000003  Feature Addition            LOW       2024-03-11  Bob Johnson       

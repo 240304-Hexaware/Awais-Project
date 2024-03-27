@@ -19,33 +19,46 @@
         <tbody>
           <ng-template ngFor let-user [ngForOf]="users" let-i="index">
             <tr>
-              <td scope="row">{{ parseId(user?.id) }}</td>
-              <td>
+              <td scope="row" [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">{{ parseId(user?.id) }}</td>
+              <td [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">
                 {{ user.name }}
               </td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.roles }}</td>
-              <td>{{ user.blocked }}</td>
+              <td [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">{{ user.email }}</td>
+              <td [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">{{ user.roles }}</td>
+              <!-- <td>{{ user.blocked }}</td> -->
+              <td class="overflow-hidden" [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">
+                <div ngbDropdown container="body">
+                  <button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>
+                    Actions
+                  </button>
+                  <div ngbDropdownMenu>
+                    <button *ngIf="user.roles === 'ROLE_ADMIN'" (click)="makeAdmin(user.id)" ngbDropdownItem>
+                      Remove Admin
+                    </button>
+                    <button *ngIf="user.roles === 'ROLE_USER'" (click)="makeAdmin(user.id)" ngbDropdownItem>
+                      Make Admin
+                    </button>
+                    <button *ngIf="!user.blocked" ngbDropdownItem>
+                      Block
+                    </button>
+                    <button *ngIf="user.blocked" ngbDropdownItem>
+                      Unblock
+                    </button>
+                  </div>
+                </div>
+              </td>
             </tr>
           </ng-template>
         </tbody>
       </table>
 
       <div class="d-flex justify-content-between p-2">
-        <ngb-pagination
-          [collectionSize]="this.page.content"
-          [(page)]="this.page.pageNumber"
-          [pageSize]="this.page.pageSize"
-          (pageChange)="this.fetchData()"
-        >
+        <ngb-pagination [collectionSize]="this.page.content" [(page)]="this.page.pageNumber"
+          [pageSize]="this.page.pageSize" (pageChange)="this.fetchData()">
         </ngb-pagination>
 
-        <select
-          class="form-select"
-          style="width: auto"
-          [(ngModel)]="this.page.pageSize"
-          (ngModelChange)="this.fetchData()"
-        >
+        <select class="form-select" style="width: auto" [(ngModel)]="this.page.pageSize"
+          (ngModelChange)="this.fetchData()">
           <option [ngValue]="2">2 items per page</option>
           <option [ngValue]="4">4 items per page</option>
           <option [ngValue]="6">6 items per page</option>

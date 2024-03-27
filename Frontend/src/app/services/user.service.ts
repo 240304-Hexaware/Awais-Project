@@ -51,6 +51,10 @@ export class UserService {
     return this.authService.isAuthenticated();
   }
 
+  hasRole(role: string): Boolean {
+    return this.authService.hasRole(role);
+  }
+
   loginRequest(user: { email: string; password: string }) {
     this.http
       .post<{ token: string }>(`${this.url}/auth/login`, user)
@@ -62,11 +66,32 @@ export class UserService {
         },
         error: (e) => {
           console.error(e?.error?.message);
+          alert(e?.error?.message);
         },
         complete: () => {
           console.info('Login Completed');
           this.router.navigate(['/']);
         },
+      });
+  }
+
+  makeAdmin(id: number) {
+    this.http
+      .post<any>(`${this.url}/admin/promote/${id}`, {})
+      .subscribe({
+        next: (response) => console.log(response),
+        error: (error) => console.log(error),
+        complete: () => console.info('complete'),
+      });
+  }
+
+  removeAdmin(id: number) {
+    this.http
+      .post<any>(`${this.url}/admin/demote/${id}`, {})
+      .subscribe({
+        next: (response) => console.log(response),
+        error: (error) => console.log(error),
+        complete: () => console.info('complete'),
       });
   }
 
@@ -77,9 +102,18 @@ export class UserService {
 
   registerRequest(user: User) {
     this.http.post<User>(`${this.url}/user/register`, user).subscribe({
-      next: (v) => console.log(v),
-      error: (e) => console.error(e),
-      complete: () => console.info('complete'),
+      next: (v) => {
+        console.log(v);
+        alert('User Created Successfully!');
+      },
+      error: (e) => {
+        console.error(e);
+        alert(e?.error?.message);
+      },
+      complete: () => {
+        console.info('complete');
+        this.router.navigate(['/login']);
+      },
     });
   }
 }

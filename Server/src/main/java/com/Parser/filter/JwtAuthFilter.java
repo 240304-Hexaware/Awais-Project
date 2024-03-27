@@ -26,8 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     // @Autowired
     private AuthenticationService authenticationService;
 
-    public JwtAuthFilter(JwtService jwtService, AuthenticationService authenticationService)
-    {
+    public JwtAuthFilter(JwtService jwtService, AuthenticationService authenticationService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
@@ -45,6 +44,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = authenticationService.loadUserByUsername(username);
+
             if (jwtService.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
                         null, userDetails.getAuthorities());

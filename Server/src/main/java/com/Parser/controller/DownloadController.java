@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,9 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/download")
 public class DownloadController {
 
+    @Value("${file.path.parse}")
+    private String parseFilePath;
+
+    @Value("${file.path.spec}")
+    private String specFilePath;
+
     @GetMapping("/parse/file")
     public ResponseEntity<Resource> downloadParseFile(@RequestParam("filename") String filename) throws IOException {
-        String filePath = "Server/src/main/resources/parse/" + filename;
+
+        String filePath = parseFilePath + "/" + filename;
 
         Path path = Paths.get(filePath);
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
@@ -39,7 +47,7 @@ public class DownloadController {
     @GetMapping("/spec/file")
     public ResponseEntity<Resource> downloadSpecFile(@RequestParam("filename") String filename) throws IOException {
         // Replace this path with the actual path to your file
-        String filePath = "Server/src/main/resources/specification/" + filename;
+        String filePath = specFilePath + "/" + filename;
 
         // Load file as Resource
         Path path = Paths.get(filePath);

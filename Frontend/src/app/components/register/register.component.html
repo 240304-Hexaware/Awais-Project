@@ -51,13 +51,13 @@
           >
             <div
               *ngIf="registerForm?.get('email')?.hasError('required')"
-              class="form-text"
+              class="form-text text-danger"
             >
               Email is required
             </div>
             <div
               *ngIf="registerForm.get('email')?.errors?.['email']"
-              class="form-text"
+              class="form-text text-danger"
             >
               Email should be valid
             </div>

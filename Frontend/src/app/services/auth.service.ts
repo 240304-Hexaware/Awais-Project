@@ -34,6 +34,19 @@ export class AuthService {
     localStorage.removeItem(this.authTokenKey);
   }
 
+  getRolesFromToken(): string[] {
+    if (this.authToken) {
+      const tokenPayload: any = jwtDecode(this.authToken); // Decode the JWT token
+      return tokenPayload.roles; // Extract roles from token
+    }
+    return [];
+  }
+
+  hasRole(role: string): boolean {
+    const roles = this.getRolesFromToken();
+    return roles.includes(role);
+  }
+
   isTokenExpired(): boolean {
     if (!this.authToken) {
       return true;

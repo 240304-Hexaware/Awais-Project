@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.Parser.exceptions.ErrorResponse;
+import com.Parser.exceptions.FileNotFoundException;
 import com.Parser.exceptions.MongoDbException;
 import com.Parser.exceptions.UserExistException;
 import com.Parser.exceptions.UserInvalidException;
@@ -52,5 +53,12 @@ public class GlobalExceptionController {
         return new ResponseEntity<ErrorResponse>(
                 new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public @ResponseBody ResponseEntity<ErrorResponse> handleFileNotFoundException(FileNotFoundException ex) {
+        return new ResponseEntity<ErrorResponse>(new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage()),
+                HttpStatus.NOT_FOUND);
     }
 }

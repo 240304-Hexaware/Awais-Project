@@ -4,9 +4,9 @@
     "length": 10
   },
 
-  "description": {
-    "startPos": 10,
-    "length": 30
+  "dueDate": {
+    "startPos": 50,
+    "length": 10
   },
 
   "priority": {
@@ -14,9 +14,9 @@
     "length": 10
   },
 
-  "dueDate": {
-    "startPos": 50,
-    "length": 10
+  "description": {
+    "startPos": 10,
+    "length": 30
   },
 
   "assign": {

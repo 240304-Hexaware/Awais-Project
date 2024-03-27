@@ -4,12 +4,11 @@ import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SpecificationService {
-
   url = 'http://localhost:8080';
-  
+
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   getSpecFiles(
@@ -26,5 +25,13 @@ export class SpecificationService {
         headers,
       }
     );
+  }
+
+  getAllSpecFiles(): Observable<any> {
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.get<any>(`${this.url}/parse/spec/list`, {
+      headers,
+    });
   }
 }

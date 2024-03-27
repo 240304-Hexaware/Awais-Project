@@ -1,11 +1,11 @@
 package com.Parser.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.Parser.entity.ParseFile;
 import com.Parser.entity.Specification;
 import com.Parser.repository.SpecificationRepository;
 
@@ -37,6 +36,10 @@ public class SpecificationService {
         return repository.findAll(pageable);
     }
 
+    public List<Specification> getAllSpecFiles() {
+        return repository.findAll();
+    }
+
     public Specification insert(Specification specification) {
         return repository.insert(specification);
     }
@@ -45,8 +48,9 @@ public class SpecificationService {
         return repository.save(specification);
     }
 
-    public Specification findById(String id) {
-        return this.repository.findById(id).orElse(null);
+    public Specification findById(String id) throws FileNotFoundException {
+        return this.repository.findById(id)
+                .orElseThrow(() -> new FileNotFoundException("Specification File: " + id + " not Found!"));
     }
 
     public void writeFile(MultipartFile file, String id) throws IOException {

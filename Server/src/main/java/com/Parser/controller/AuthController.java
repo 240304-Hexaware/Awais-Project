@@ -1,10 +1,13 @@
 package com.Parser.controller;
 
+import java.util.Collection;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +43,9 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
-
-                String token = jwtService.generateToken(authRequest.getEmail());
+                
+                Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+                String token = jwtService.generateToken(authRequest.getEmail(), authorities);
 
                 return ResponseHandler.tokenResponse(token);
             } else {

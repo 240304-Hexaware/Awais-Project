@@ -18,4 +18,12 @@ export class FileService {
       headers,
     });
   }
+
+  uploadParseFile(formData: FormData, id: string): Observable<any> {
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.post(`${this.url}/parse/file/upload/${id}`, formData, {
+      headers,
+    });
+  }
 }
