@@ -3,7 +3,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { UserPage } from '../../interfaces/user';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Direction, Page, SortFields } from '../../interfaces/page';
 import { FormsModule } from '@angular/forms';
 
@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
     NavbarComponent,
     DecimalPipe,
     CommonModule,
+    NgbDropdownModule,
     NgbPaginationModule,
     FormsModule,
   ],
@@ -33,6 +34,16 @@ export class UserManagementComponent implements OnInit {
   };
 
   constructor(private usersService: UserService) {}
+
+  makeAdmin(id: number)
+  {
+    this.usersService.makeAdmin(id);
+  }
+
+  removeAdmin(id: number)
+  {
+    this.usersService.removeAdmin(id);
+  }
 
   fetchData(): void {
     this.usersService

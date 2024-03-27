@@ -1,11 +1,5 @@
 package com.Parser.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Parser.response.ResponseHandler;
@@ -40,7 +32,7 @@ public class AdminController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Object> admin(@RequestHeader("Authorization") String token) {
 
-        // System.out.println(jwtService.extractEmail(token.split(" ")[1]));
+        System.out.println("Email " + jwtService.extractEmail(token.split(" ")[1]));
         return ResponseHandler.generateMessage("AdminController", HttpStatus.OK);
     }
 

@@ -1,7 +1,5 @@
 package com.Parser.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Parser.entity.UserInfo;
-import com.Parser.repository.UserInfoRepository;
 import com.Parser.response.ResponseHandler;
 import com.Parser.service.UserService;
 

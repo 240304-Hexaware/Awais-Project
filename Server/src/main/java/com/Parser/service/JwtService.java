@@ -1,12 +1,15 @@
 package com.Parser.service;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +25,13 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String SECRET;
 
-    public String generateToken(String userName) {
+    public String generateToken(String userName, Collection<? extends GrantedAuthority> authorities) {
         Map<String, Object> claims = new HashMap<>();
+
+        if (authorities != null && !authorities.isEmpty()) {
+            claims.put("roles", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        }
+
         return createToken(claims, userName);
     }
 

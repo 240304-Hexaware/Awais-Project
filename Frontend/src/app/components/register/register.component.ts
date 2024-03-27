@@ -52,7 +52,7 @@ export class RegisterComponent {
       this.userService.registerRequest(user);
     } else {
       // Form is invalid, display error messages
-      console.log('Form is invalid');
+      alert('Form is invalid');
     }
   }
 }

@@ -19,9 +19,6 @@ import com.Parser.exceptions.UserNotFoundException;
 import com.Parser.repository.UserInfoRepository;
 import com.mongodb.MongoException;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-
 @Service
 public class UserService {
 

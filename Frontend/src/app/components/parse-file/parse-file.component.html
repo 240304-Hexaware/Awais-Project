@@ -1,0 +1,95 @@
+<div class="mt-5">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col" (click)="onSortParseFiles('id')">#</th>
+                <th scope="col" (click)="onSortParseFiles('filename')">
+                    File Name
+                </th>
+                <th scope="col" (click)="onSortParseFiles('user')">
+                    Uploaded By
+                </th>
+                <th scope="col" (click)="onSortParseFiles('specificationId')">
+                    Specification File
+                </th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-file [ngForOf]="this.parseFiles" let-i="index">
+                <tr>
+                    <td scope="row">
+                        {{
+                        (this.parseFilePage.pageNumber - 1) *
+                        this.parseFilePage.pageSize +
+                        i +
+                        1
+                        }}
+                    </td>
+                    <td>
+                        {{ file.fileName }}
+                    </td>
+                    <td>{{ file.user }}</td>
+                    <td>{{ file.specificationName }}</td>
+                    <td class="overflow-hidden">
+                        <div ngbDropdown container="body">
+                            <button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>
+                                Actions
+                            </button>
+                            <div ngbDropdownMenu>
+                                <button ngbDropdownItem (click)="openVerticallyCentered(content)">
+                                    View
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Parsed Record Model -->
+                <ng-template #content let-modal>
+                    <div class="modal-header">
+                        <h4 class="modal-title">{{ file.fileName }}</h4>
+                        <button type="button" class="btn-close" aria-label="Close"
+                            (click)="modal.dismiss('Cross click')"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <span class="fw-bold">Uploaded By: </span>{{ file.user }}
+                        </p>
+                        <div>
+                            <span class="fw-bold">Specification File: </span><a [href]="
+                    'http://localhost:8080/download/spec/file?filename=' +
+                    file.specificationId +
+                    '.json'
+                  " [download]="file.specificationName + '.json'">{{ file.specificationName }}</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
+                            Close
+                        </button>
+                        <a class="btn btn-primary" [href]="
+                  'http://localhost:8080/download/parse/file?filename=' +
+                  file.id +
+                  '.txt'
+                " [download]="file.fileName + '.txt'">Download</a>
+                    </div>
+                </ng-template>
+                <!-- End of Model -->
+            </ng-template>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between p-2">
+        <ngb-pagination [collectionSize]="this.parseFilePage.content" [(page)]="this.parseFilePage.pageNumber"
+            [pageSize]="this.parseFilePage.pageSize" (pageChange)="this.fetchParseFiles()">
+        </ngb-pagination>
+
+        <select class="form-select" style="width: auto" [(ngModel)]="this.parseFilePage.pageSize"
+            (ngModelChange)="this.fetchParseFiles()">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+        </select>
+    </div>
+</div>

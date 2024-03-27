@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret Key used for JWT"
+    },
+    {
+      "name": "file.path.parse",
+      "type": "java.lang.String",
+      "description": "Source Path for Parse File"
+    },
+    {
+      "name": "file.path.spec",
+      "type": "java.lang.String",
+      "description": "Source Path for Spec File"
+    }
+  ]
+}

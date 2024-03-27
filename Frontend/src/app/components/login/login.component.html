@@ -15,10 +15,10 @@
                 loginForm?.get('email')?.touched;
               else emailHelp">
 
-            <div *ngIf="loginForm?.get('email')?.hasError('required')" class="form-text">
+            <div *ngIf="loginForm?.get('email')?.hasError('required')" class="form-text text-danger">
               Email is required
             </div>
-            <div *ngIf="loginForm.get('email')?.errors?.['email']" class="form-text">
+            <div *ngIf="loginForm.get('email')?.errors?.['email']" class="form-text text-danger">
               Email should be valid
             </div>
           </div>
