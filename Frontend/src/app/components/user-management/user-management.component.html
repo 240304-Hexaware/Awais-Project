@@ -3,7 +3,13 @@
   <div class="container-xxl">
     <div class="d-flex justify-content-between">
       <h3>User List</h3>
-      <button type="button" class="btn btn-primary">Create</button>
+      <button
+        type="button"
+        (click)="openVerticallyCentered(formUser)"
+        class="btn btn-primary"
+      >
+        Create
+      </button>
     </div>
     <div class="mt-5">
       <table class="table table-striped">
@@ -19,29 +25,60 @@
         <tbody>
           <ng-template ngFor let-user [ngForOf]="users" let-i="index">
             <tr>
-              <td scope="row" [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">{{ parseId(user?.id) }}</td>
-              <td [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">
+              <td
+                scope="row"
+                [ngStyle]="{ 'background-color': user.blocked ? 'red' : '' }"
+              >
+                {{ (this.page.pageNumber - 1) * this.page.pageSize + i + 1 }}
+              </td>
+              <td [ngStyle]="{ 'background-color': user.blocked ? 'red' : '' }">
                 {{ user.name }}
               </td>
-              <td [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">{{ user.email }}</td>
-              <td [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">{{ user.roles }}</td>
-              <!-- <td>{{ user.blocked }}</td> -->
-              <td class="overflow-hidden" [ngStyle]="{'background-color': user.blocked ? 'red' : ''}">
+              <td [ngStyle]="{ 'background-color': user.blocked ? 'red' : '' }">
+                {{ user.email }}
+              </td>
+              <td [ngStyle]="{ 'background-color': user.blocked ? 'red' : '' }">
+                {{ user.roles }}
+              </td>
+              <td
+                class="overflow-hidden"
+                [ngStyle]="{ 'background-color': user.blocked ? 'red' : '' }"
+              >
                 <div ngbDropdown container="body">
-                  <button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    ngbDropdownToggle
+                  >
                     Actions
                   </button>
                   <div ngbDropdownMenu>
-                    <button *ngIf="user.roles === 'ROLE_ADMIN'" (click)="makeAdmin(user.id)" ngbDropdownItem>
+                    <button
+                      *ngIf="user.roles === 'ROLE_ADMIN'"
+                      (click)="removeAdmin(user.id)"
+                      ngbDropdownItem
+                    >
                       Remove Admin
                     </button>
-                    <button *ngIf="user.roles === 'ROLE_USER'" (click)="makeAdmin(user.id)" ngbDropdownItem>
+                    <button
+                      *ngIf="user.roles === 'ROLE_USER'"
+                      (click)="makeAdmin(user.id)"
+                      ngbDropdownItem
+                    >
                       Make Admin
                     </button>
-                    <button *ngIf="!user.blocked" ngbDropdownItem>
+                    <button
+                      *ngIf="!user.blocked"
+                      (click)="blockUser(user.id)"
+                      ngbDropdownItem
+                    >
                       Block
                     </button>
-                    <button *ngIf="user.blocked" ngbDropdownItem>
+                    <button
+                      *ngIf="user.blocked"
+                      (click)="unblockUser(user.id)"
+                      ngbDropdownItem
+                    >
                       Unblock
                     </button>
                   </div>
@@ -53,17 +90,188 @@
       </table>
 
       <div class="d-flex justify-content-between p-2">
-        <ngb-pagination [collectionSize]="this.page.content" [(page)]="this.page.pageNumber"
-          [pageSize]="this.page.pageSize" (pageChange)="this.fetchData()">
+        <ngb-pagination
+          [collectionSize]="this.page.content"
+          [(page)]="this.page.pageNumber"
+          [pageSize]="this.page.pageSize"
+          (pageChange)="this.fetchData()"
+        >
         </ngb-pagination>
 
-        <select class="form-select" style="width: auto" [(ngModel)]="this.page.pageSize"
-          (ngModelChange)="this.fetchData()">
+        <select
+          class="form-select"
+          style="width: auto"
+          [(ngModel)]="this.page.pageSize"
+          (ngModelChange)="this.fetchData()"
+        >
           <option [ngValue]="2">2 items per page</option>
           <option [ngValue]="4">4 items per page</option>
           <option [ngValue]="6">6 items per page</option>
         </select>
       </div>
     </div>
+    <!-- Parsed Record Model -->
+    <ng-template #formUser let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Create User</h4>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="modal.dismiss('Cross click')"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="this.userForm">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+            />
+
+            <div
+              *ngIf="
+                userForm?.get('name')?.invalid && userForm?.get('name')?.touched
+              "
+            >
+              <div
+                *ngIf="userForm?.get('name')?.hasError('required')"
+                class="form-text"
+              >
+                Name is required
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+            />
+
+            <div
+              *ngIf="
+                userForm?.get('email')?.invalid &&
+                userForm?.get('email')?.touched
+              "
+            >
+              <div
+                *ngIf="userForm?.get('email')?.hasError('required')"
+                class="form-text text-danger"
+              >
+                Email is required
+              </div>
+              <div
+                *ngIf="userForm.get('email')?.errors?.['email']"
+                class="form-text text-danger"
+              >
+                Email should be valid
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="password1" class="form-label">New Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password1"
+              formControlName="password"
+            />
+
+            <div
+              *ngIf="
+                userForm?.get('password')?.invalid &&
+                userForm?.get('password')?.touched
+              "
+            >
+              <div
+                *ngIf="userForm?.get('password')?.hasError('required')"
+                class="form-text text-danger"
+              >
+                Password is required
+              </div>
+              <div
+                *ngIf="userForm.get('password')?.errors?.['minlength']"
+                class="form-text text-danger"
+              >
+                Password must be at least 8 characters long
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <label for="password2" class="form-label">Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password2"
+              formControlName="confirmPassword"
+            />
+
+            <div
+              *ngIf="
+                userForm?.get('confirmPassword')?.touched &&
+                userForm?.get('confirmPassword')?.invalid
+              "
+            >
+              <div
+                *ngIf="userForm?.get('confirmPassword')?.hasError('required')"
+                class="form-text text-danger"
+              >
+                Password is required
+              </div>
+              <div
+                *ngIf="userForm.get('confirmPassword')?.errors?.['minlength']"
+                class="form-text text-danger"
+              >
+                Password must be at least 8 characters long
+              </div>
+
+              <div
+                *ngIf="userForm?.get('confirmPassword')?.errors?.['mismatch']"
+                class="form-text text-danger"
+              >
+                Password mismatched
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <select class="form-select" formControlName="roles">
+              <option selected disabled value="">Select Role</option>
+              <option value="ROLE_ADMIN">Admin</option>
+              <option value="ROLE_USER">User</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="modal.close('Close click')"
+        >
+          Close
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          (click)="handleSubmit(modal)"
+        >
+          Submit
+        </button>
+      </div>
+    </ng-template>
+    <!-- End of Model -->
+
+    <!-- (click)="modal.close('Close click')" -->
   </div>
 </div>

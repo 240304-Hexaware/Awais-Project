@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -28,12 +29,19 @@ export class RegisterComponent {
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(8),
+        this.matchPassword,
       ]),
       confirmPassword: new FormControl('', [
         Validators.required,
         Validators.minLength(8),
       ]),
     });
+  }
+
+  matchPassword(control: AbstractControl): { mismatch: boolean } | null {
+    const password = control.root.get('password')?.value;
+    const confirmPassword = control.value;
+    return password === confirmPassword ? null : { mismatch: true };
   }
 
   register() {

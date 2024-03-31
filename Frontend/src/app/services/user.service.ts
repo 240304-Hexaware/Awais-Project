@@ -47,6 +47,11 @@ export class UserService {
     );
   }
 
+  getUser(): Observable<any> {
+    const headers = this.authService.createAuthorizationHeader();
+    return this.http.get<any>(`${this.url}/user`, { headers });
+  }
+
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
   }
@@ -56,6 +61,11 @@ export class UserService {
   }
 
   loginRequest(user: { email: string; password: string }) {
+    let alert = {
+      type: '',
+      message: '',
+    };
+
     this.http
       .post<{ token: string }>(`${this.url}/auth/login`, user)
       .subscribe({
@@ -66,33 +76,56 @@ export class UserService {
         },
         error: (e) => {
           console.error(e?.error?.message);
-          alert(e?.error?.message);
+          // alert(e?.error?.message);
+          alert.message = e?.error?.message || 'Server error';
+          alert.type = 'danger';
         },
         complete: () => {
           console.info('Login Completed');
           this.router.navigate(['/']);
         },
       });
+    return alert;
   }
 
   makeAdmin(id: number) {
-    this.http
-      .post<any>(`${this.url}/admin/promote/${id}`, {})
-      .subscribe({
-        next: (response) => console.log(response),
-        error: (error) => console.log(error),
-        complete: () => console.info('complete'),
-      });
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.post<any>(
+      `${this.url}/admin/promote/${id}`,
+      {},
+      { headers }
+    );
   }
 
   removeAdmin(id: number) {
-    this.http
-      .post<any>(`${this.url}/admin/demote/${id}`, {})
-      .subscribe({
-        next: (response) => console.log(response),
-        error: (error) => console.log(error),
-        complete: () => console.info('complete'),
-      });
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.post<any>(
+      `${this.url}/admin/demote/${id}`,
+      {},
+      { headers }
+    );
+  }
+
+  blockUser(id: number) {
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.post<any>(
+      `${this.url}/admin/block/${id}`,
+      {},
+      { headers }
+    );
+  }
+
+  unblockUser(id: number) {
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.post<any>(
+      `${this.url}/admin/unblock/${id}`,
+      {},
+      { headers }
+    );
   }
 
   logoutRequest() {
@@ -115,5 +148,40 @@ export class UserService {
         this.router.navigate(['/login']);
       },
     });
+  }
+
+  createUser(user: User) {
+    this.http.post<User>(`${this.url}/user/register`, user).subscribe({
+      next: (v) => {
+        console.log(v);
+        alert('User Created Successfully!');
+      },
+      error: (e) => {
+        console.error(e);
+        alert(e?.error?.message);
+      },
+      complete: () => {
+        console.info('complete');
+      },
+    });
+  }
+
+  updateUser(user: User) {
+    const headers = this.authService.createAuthorizationHeader();
+    this.http
+      .put<User>(`${this.url}/user/${user.id}`, user, { headers })
+      .subscribe({
+        next: (v) => {
+          console.log(v);
+          alert('User Update Successfully!');
+        },
+        error: (e) => {
+          console.error(e);
+          alert(e?.error?.message);
+        },
+        complete: () => {
+          console.info('complete');
+        },
+      });
   }
 }

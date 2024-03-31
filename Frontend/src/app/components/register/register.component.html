@@ -75,8 +75,8 @@
 
           <div
             *ngIf="
-              registerForm?.get('password')?.invalid &&
-              registerForm?.get('password')?.touched
+              registerForm?.get('password')?.touched &&
+              registerForm?.get('password')?.invalid
             "
           >
             <div
@@ -105,9 +105,8 @@
 
           <div
             *ngIf="
-              registerForm?.get('confirmPassword')?.invalid &&
-                registerForm?.get('confirmPassword')?.touched;
-              else mismatch
+              registerForm?.get('confirmPassword')?.touched &&
+              registerForm?.get('confirmPassword')?.invalid
             "
           >
             <div
@@ -122,21 +121,14 @@
             >
               Password must be at least 8 characters long
             </div>
-          </div>
 
-          <ng-template #mismatch id="mismatch">
             <div
-              *ngIf="
-                registerForm?.get('confirmPassword')?.touched &&
-                !!registerForm?.get('password')?.value.length &&
-                registerForm?.get('confirmPassword')?.value !==
-                  registerForm?.get('password')?.value
-              "
+              *ngIf="registerForm?.get('confirmPassword')?.errors?.['mismatch']"
               class="form-text text-danger"
             >
               Password mismatched
             </div>
-          </ng-template>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">Submit</button>

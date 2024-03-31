@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+<div class="container-lg pt-5">
+  <div class="body px-5 pt-4 pb-5">
+    <div class="d-flex justify-content-between">
+      <h3>Profile Details</h3>
+      <div *ngIf="this.edit; else profileEdit">
+        <button class="btn btn-secondary" (click)="this.cancelEdit()">
+          Cencel
+        </button>
+        <button class="btn btn-primary ms-4" (click)="this.updateProfile()">
+          Update
+        </button>
+      </div>
+      <ng-template #profileEdit>
+        <button class="btn btn-primary" (click)="this.editProfile()">
+          Edit Profile
+        </button>
+      </ng-template>
+    </div>
+    <form [formGroup]="this.userForm">
+      <div class="d-flex mt-5">
+        <p class="w-25 my-2">Full Name</p>
+        <input class="form-control px-3 w-25" formControlName="name" />
+      </div>
+
+      <div class="d-flex mt-5">
+        <p class="w-25 my-2">Email</p>
+        <input class="form-control px-3 w-25" formControlName="email" />
+      </div>
+
+      <div class="d-flex mt-5">
+        <p class="w-25 my-2">Password</p>
+        <input
+          class="form-control px-3 w-25"
+          [placeholder]="!!this.edit ? 'Enter New Password' : '**********'"
+          formControlName="password"
+        />
+      </div>
+
+      <div class="d-flex mt-5">
+        <p class="w-25 my-2">Role</p>
+        <input
+          class="form-control px-3 w-25"
+          formControlName="password"
+          formControlName="roles"
+        />
+      </div>
+    </form>
+  </div>
+</div>

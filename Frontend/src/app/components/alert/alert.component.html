@@ -1,0 +1,7 @@
+<ngb-alert
+  *ngIf="this.active"
+  class="body"
+  [type]="this.type"
+  (closed)="close()"
+  >{{ this.message }}</ngb-alert
+>
