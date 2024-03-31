@@ -42,6 +42,14 @@ export class AuthService {
     return [];
   }
 
+  getIdFromToken(): string | undefined {
+    if (this.authToken) {
+      const tokenPayload = jwtDecode(this.authToken); // Decode the JWT token
+      return tokenPayload?.sub; // Extract roles from token
+    }
+    return '';
+  }
+
   hasRole(role: string): boolean {
     const roles = this.getRolesFromToken();
     return roles.includes(role);

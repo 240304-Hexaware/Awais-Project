@@ -15,6 +15,7 @@ public class UserInfoService implements UserDetails {
     private String email;
     private String password;
     private List<GrantedAuthority> authorities;
+    private boolean enabled;
 
     public UserInfoService(UserInfo userInfo) {
         email = userInfo.getEmail();
@@ -22,6 +23,7 @@ public class UserInfoService implements UserDetails {
         authorities = Arrays.stream(userInfo.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+        enabled = !userInfo.getBlocked();
     }
 
     @Override
@@ -56,6 +58,6 @@ public class UserInfoService implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

@@ -27,9 +27,10 @@ public class DownloadController {
     private String specFilePath;
 
     @GetMapping("/parse/file")
-    public ResponseEntity<Resource> downloadParseFile(@RequestParam("filename") String filename) throws IOException {
+    public ResponseEntity<Resource> downloadParseFile(@RequestParam("fileId") String fileId,
+            @RequestParam("customFileName") String filename) throws IOException {
 
-        String filePath = parseFilePath + "/" + filename;
+        String filePath = parseFilePath + "/" + fileId;
 
         Path path = Paths.get(filePath);
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
@@ -45,9 +46,10 @@ public class DownloadController {
     }
 
     @GetMapping("/spec/file")
-    public ResponseEntity<Resource> downloadSpecFile(@RequestParam("filename") String filename) throws IOException {
+    public ResponseEntity<Resource> downloadSpecFile(@RequestParam("fileId") String fileId,
+            @RequestParam("customFileName") String filename) throws IOException {
         // Replace this path with the actual path to your file
-        String filePath = specFilePath + "/" + filename;
+        String filePath = specFilePath + "/" + fileId;
 
         // Load file as Resource
         Path path = Paths.get(filePath);

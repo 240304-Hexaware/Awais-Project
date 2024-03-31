@@ -8,17 +8,31 @@
 
         <div class="mb-3">
           <label for="email" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="email" aria-describedby="emailHelp" formControlName="email" />
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            aria-describedby="emailHelp"
+            formControlName="email"
+          />
 
-          <div *ngIf="
+          <div
+            *ngIf="
               loginForm?.get('email')?.invalid &&
                 loginForm?.get('email')?.touched;
-              else emailHelp">
-
-            <div *ngIf="loginForm?.get('email')?.hasError('required')" class="form-text text-danger">
+              else emailHelp
+            "
+          >
+            <div
+              *ngIf="loginForm?.get('email')?.hasError('required')"
+              class="form-text text-danger"
+            >
               Email is required
             </div>
-            <div *ngIf="loginForm.get('email')?.errors?.['email']" class="form-text text-danger">
+            <div
+              *ngIf="loginForm.get('email')?.errors?.['email']"
+              class="form-text text-danger"
+            >
               Email should be valid
             </div>
           </div>
@@ -32,15 +46,28 @@
 
         <div class="mb-2">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" formControlName="password" />
-          <div *ngIf="
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            formControlName="password"
+          />
+          <div
+            *ngIf="
               loginForm?.get('password')?.invalid &&
               loginForm?.get('password')?.touched
-            ">
-            <div *ngIf="loginForm?.get('password')?.hasError('required')" class="form-text text-danger">
+            "
+          >
+            <div
+              *ngIf="loginForm?.get('password')?.hasError('required')"
+              class="form-text text-danger"
+            >
               Password is required
             </div>
-            <div *ngIf="loginForm.get('password')?.errors?.['minlength']" class="form-text text-danger">
+            <div
+              *ngIf="loginForm.get('password')?.errors?.['minlength']"
+              class="form-text text-danger"
+            >
               Password must be at least 8 characters long
             </div>
           </div>
@@ -64,4 +91,9 @@
       <img class="w-100 h-100" src="../../../assets/Data Parser.jpeg" />
     </div>
   </div>
+  <app-alert
+    *ngIf="!!this.alert.type.length"
+    [message]="this.alert.message"
+    [type]="this.alert.type"
+  />
 </div>

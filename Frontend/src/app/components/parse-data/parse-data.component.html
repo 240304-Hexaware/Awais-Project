@@ -1,112 +1,133 @@
 <div class="mt-5">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col" (click)="onSortRecords('id')">#</th>
-                <th scope="col" (click)="onSortRecords('taskId')">Task ID</th>
-                <th scope="col" (click)="onSortRecords('description')">
-                    Description
-                </th>
-                <th scope="col" (click)="onSortRecords('priority')">
-                    Priotiry
-                </th>
-                <th scope="col" (click)="onSortRecords('roles')">Due Date</th>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" (click)="onSortRecords('id')">#</th>
+        <th scope="col" (click)="onSortRecords('taskId')">Task ID</th>
+        <th scope="col" (click)="onSortRecords('description')">Description</th>
+        <th scope="col" (click)="onSortRecords('priority')">Priotiry</th>
+        <th scope="col" (click)="onSortRecords('roles')">Due Date</th>
 
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-template ngFor let-record [ngForOf]="this.records" let-i="index">
-                <tr>
-                    <td scope="row">
-                        {{
-                        (this.recordPage.pageNumber - 1) *
-                        this.recordPage.pageSize +
-                        i +
-                        1
-                        }}
-                    </td>
-                    <td>{{ record.taskID }}</td>
-                    <td>
-                        {{ record.description }}
-                    </td>
-                    <td>{{ record.priority }}</td>
-                    <td>{{ record.dueDate }}</td>
-                    <!-- <td>Action</td> -->
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template ngFor let-record [ngForOf]="this.records" let-i="index">
+        <tr>
+          <td scope="row">
+            {{
+              (this.recordPage.pageNumber - 1) * this.recordPage.pageSize +
+                i +
+                1
+            }}
+          </td>
+          <td>{{ record.taskID }}</td>
+          <td>
+            {{ record.description }}
+          </td>
+          <td>{{ record.priority }}</td>
+          <td>{{ record.dueDate }}</td>
+          <!-- <td>Action</td> -->
 
-                    <td class="overflow-hidden">
-                        <div ngbDropdown container="body">
-                            <button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>
-                                Actions
-                            </button>
-                            <div ngbDropdownMenu>
-                                <button ngbDropdownItem (click)="openVerticallyCentered(content)">
-                                    View
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+          <td class="overflow-hidden">
+            <div ngbDropdown container="body">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                ngbDropdownToggle
+              >
+                Actions
+              </button>
+              <div ngbDropdownMenu>
+                <button
+                  ngbDropdownItem
+                  (click)="openVerticallyCentered(content)"
+                >
+                  View
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
 
-                <!-- Parsed Record Model -->
-                <ng-template #content let-modal>
-                    <div class="modal-header">
-                        <h4 class="modal-title">{{ record.taskID }}</h4>
-                        <button type="button" class="btn-close" aria-label="Close"
-                            (click)="modal.dismiss('Cross click')"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                            <span class="fw-bold">Descritpion: </span>{{ record.description }}
-                        </p>
-                        <p>
-                            <span class="fw-bold">Priority: </span>{{ record.priority }}
-                        </p>
-                        <p>
-                            <span class="fw-bold">Assigned: </span>{{ record.assignee }}
-                        </p>
-                        <p>
-                            <span class="fw-bold">Due Date: </span>{{ record.dueDate }}
-                        </p>
-                        <p>
-                            <span class="fw-bold">Uploaded By: </span>{{ record.user }}
-                        </p>
-                        <div>
-                            <span class="fw-bold">Parse File: </span><a [href]="
-                    'http://localhost:8080/download/parse/file?filename=' +
-                    record.parseFileId +
-                    '.txt'
-                  " [download]="record.parseFileName + '.txt'">{{ record.parseFileName }}</a>
-                        </div>
-                        <div>
-                            <span class="fw-bold">Specification File: </span><a [href]="
-                    'http://localhost:8080/download/spec/file?filename=' +
-                    record.specificationId +
-                    '.json'
-                  " [download]="record.specificationName + '.json'">{{ record.specificationName }}</a>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
-                            Close
-                        </button>
-                    </div>
-                </ng-template>
-                <!-- End of Model -->
-            </ng-template>
-        </tbody>
-    </table>
+        <!-- Parsed Record Model -->
+        <ng-template #content let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">{{ record.taskID }}</h4>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="modal.dismiss('Cross click')"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              <span class="fw-bold">Descritpion: </span>{{ record.description }}
+            </p>
+            <p><span class="fw-bold">Priority: </span>{{ record.priority }}</p>
+            <p><span class="fw-bold">Assigned: </span>{{ record.assignee }}</p>
+            <p><span class="fw-bold">Due Date: </span>{{ record.dueDate }}</p>
+            <p><span class="fw-bold">Uploaded By: </span>{{ record.user }}</p>
+            <div>
+              <span class="fw-bold">Parse File: </span>
+              <a
+                [href]="
+                  'http://localhost:8080/download/parse/file?fileId=' +
+                  record.parseFileId +
+                  '.txt&customFileName=' +
+                  record.parseFileName
+                "
+              >
+                {{ record.parseFileName }}
+              </a>
+            </div>
+            <div>
+              <span class="fw-bold">Specification File: </span
+              ><a
+                [href]="
+                  'http://localhost:8080/download/spec/file?fileId=' +
+                  record.specificationId +
+                  '.json&customFileName=' +
+                  record.specificationName
+                "
+                >{{ record.specificationName }}</a
+              >
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="modal.close('Close click')"
+            >
+              Close
+            </button>
+          </div>
+        </ng-template>
+        <!-- End of Model -->
+      </ng-template>
+    </tbody>
+  </table>
 
-    <div class="d-flex justify-content-between p-2">
-        <ngb-pagination [collectionSize]="this.recordPage.content" [(page)]="this.recordPage.pageNumber"
-            [pageSize]="this.recordPage.pageSize" (pageChange)="this.fetchRecords()">
-        </ngb-pagination>
+  <div class="d-flex justify-content-between p-2">
+    <ngb-pagination
+      [collectionSize]="this.recordPage.content"
+      [(page)]="this.recordPage.pageNumber"
+      [pageSize]="this.recordPage.pageSize"
+      (pageChange)="this.fetchRecords()"
+    >
+    </ngb-pagination>
 
-        <select class="form-select" style="width: auto" [(ngModel)]="this.recordPage.pageSize"
-            (ngModelChange)="this.fetchRecords()">
-            <option [ngValue]="2">2 items per page</option>
-            <option [ngValue]="4">4 items per page</option>
-            <option [ngValue]="6">6 items per page</option>
-        </select>
-    </div>
+    <select
+      class="form-select"
+      style="width: auto"
+      [(ngModel)]="this.recordPage.pageSize"
+      (ngModelChange)="this.fetchRecords()"
+    >
+      <option [ngValue]="2">2 items per page</option>
+      <option [ngValue]="4">4 items per page</option>
+      <option [ngValue]="6">6 items per page</option>
+    </select>
+  </div>
 </div>

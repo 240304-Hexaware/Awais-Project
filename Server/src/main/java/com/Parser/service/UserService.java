@@ -33,12 +33,12 @@ public class UserService {
         this.encoder = encoder;
     }
 
-    //  public String getEmailFromToken(String token) {
-    //     Claims claims = Jwts.parser()
-    //             .setSigningKey(SECRET_KEY)
-    //             .parseClaimsJws(token)
-    //             .getBody();
-    //     return claims.getSubject();
+    // public String getEmailFromToken(String token) {
+    // Claims claims = Jwts.parser()
+    // .setSigningKey(SECRET_KEY)
+    // .parseClaimsJws(token)
+    // .getBody();
+    // return claims.getSubject();
     // }
 
     public Optional<List<UserDTO>> getAllMapFields() {
@@ -47,6 +47,14 @@ public class UserService {
 
     public Page<UserDTO> getAllByPage(Pageable pageable) {
         return repository.findUsersWithoutPassword(pageable);
+    }
+
+    public Page<UserDTO> getAllByPageExceptOne(String email, Pageable pageable) {
+        return repository.findUsersWithoutPasswordExcludeOne(email, pageable);
+    }
+
+    public Optional<UserDTO> getUser(String email) {
+        return repository.findOneByEmailExcludePassword(email);
     }
 
     public Object addUser(UserInfo userInfo) throws MongoDbException, UserExistException, UserInvalidException {
@@ -59,6 +67,28 @@ public class UserService {
 
             if (repository.findOneByEmail(userInfo.getEmail()).isPresent()) {
                 throw new UserExistException("User: (" + userInfo.getEmail() + ") already exists.");
+            }
+
+            userInfo.setPassword(encoder.encode(userInfo.getPassword()));
+            repository.save(userInfo);
+
+            Map<String, String> data = new HashMap<String, String>();
+            data.put("roles", userInfo.getRoles());
+            data.put("email", userInfo.getEmail());
+            data.put("name", userInfo.getName());
+            data.put("_id", userInfo.getId());
+
+            return data;
+        } catch (MongoException e) {
+            throw new MongoDbException(e.getMessage());
+        }
+    }
+
+    public Object updateUser(UserInfo userInfo) throws MongoDbException, UserInvalidException {
+        try {
+
+            if (userInfo.isFieldBlank()) {
+                throw new UserInvalidException("Invalid Fields");
             }
 
             userInfo.setPassword(encoder.encode(userInfo.getPassword()));

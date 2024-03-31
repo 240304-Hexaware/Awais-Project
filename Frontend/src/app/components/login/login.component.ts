@@ -8,17 +8,23 @@ import {
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { AlertComponent } from '../alert/alert.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, AlertComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   userService: UserService = inject(UserService);
+
+  alert = {
+    type: '',
+    message: '',
+  };
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -32,16 +38,15 @@ export class LoginComponent implements OnInit {
 
   check() {
     this.userService.adminControl();
-    // this.userService.getUsers(0, 5, 'id', 'ASC').subscribe((response) => {
-    //   console.log(response);
-    // });
   }
 
   login() {
     if (this.loginForm && this.loginForm.valid) {
-      this.userService.loginRequest(this.loginForm.value);
+      this.alert = this.userService.loginRequest(this.loginForm.value);
     } else {
       console.log('Form is invalid');
+      this.alert.message = 'Form is invalid';
+      this.alert.type = 'danger';
     }
   }
 }

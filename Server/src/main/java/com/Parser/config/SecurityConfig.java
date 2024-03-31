@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/welcome", "/user/register", "/auth/login", "/download/**").permitAll())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/users/**").authenticated())
+                .authorizeHttpRequests(requests -> requests.requestMatchers("/user/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/admin/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/parse/**").authenticated())
                 .authorizeHttpRequests(requests -> requests.requestMatchers("/download/**").authenticated())
