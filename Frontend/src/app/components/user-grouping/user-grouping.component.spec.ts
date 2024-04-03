@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ParseDataComponent } from './parse-data.component';
+import { UserGroupingComponent } from './user-grouping.component';
 
-describe('ParseDataComponent', () => {
-  let component: ParseDataComponent;
-  let fixture: ComponentFixture<ParseDataComponent>;
+describe('UserGroupingComponentComponent', () => {
+  let component: UserGroupingComponent;
+  let fixture: ComponentFixture<UserGroupingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ParseDataComponent]
+      imports: [UserGroupingComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ParseDataComponent);
+    fixture = TestBed.createComponent(UserGroupingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -48,6 +48,24 @@ public class RecordController {
         return ResponseEntity.ok().body(fileServices.getRecords(pageable));
     }
 
+    @GetMapping("/data/group/spec-file")
+    public ResponseEntity<Object> getRecordsGroupedBySpecFile() {
+        return ResponseHandler.generateResponse("Data Recieved Successfully", HttpStatus.OK,
+                fileServices.getSpecFileGroupedRecords());
+    }
+
+    @GetMapping("/data/group/parse-file")
+    public ResponseEntity<Object> getRecordsGroupedByParseFile() {
+        return ResponseHandler.generateResponse("Data Recieved Successfully", HttpStatus.OK,
+                fileServices.getParseFileGroupedRecords());
+    }
+
+    @GetMapping("/data/group/user")
+    public ResponseEntity<Object> getRecordsGroupedByUser() {
+        return ResponseHandler.generateResponse("Data Recieved Successfully", HttpStatus.OK,
+                fileServices.getUserGroupedRecords());
+    }
+
     @GetMapping("/file")
     public ResponseEntity<Page<ParseFile>> getParsedFile(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

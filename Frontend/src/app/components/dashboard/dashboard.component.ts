@@ -9,12 +9,13 @@ import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileService } from '../../services/file.service';
-import { ParseDataComponent } from '../parse-data/parse-data.component';
+import { ParsedDataComponent } from '../parsed-data/parsed-data.component';
 import { ParseFileComponent } from '../parse-file/parse-file.component';
 import { SpecFileComponent } from '../spec-file/spec-file.component';
 import { FormsModule } from '@angular/forms';
 import { Specification } from '../../interfaces/specification';
 import { SpecificationService } from '../../services/specification.service';
+import { ParseDataGroupComponent } from '../parse-data-group/parse-data-group.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +27,8 @@ import { SpecificationService } from '../../services/specification.service';
     DecimalPipe,
     FormsModule,
     NgbDropdownModule,
-    ParseDataComponent,
+    ParsedDataComponent,
+    ParseDataGroupComponent,
     ParseFileComponent,
     SpecFileComponent,
   ],

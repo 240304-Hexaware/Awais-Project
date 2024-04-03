@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class RecordService {
   url = 'http://localhost:8080';
-  
+
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   getRecords(
@@ -25,5 +25,29 @@ export class RecordService {
         headers,
       }
     );
+  }
+
+  getRecordsGroupBySpecFile(): Observable<any> {
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.get<any>(`${this.url}/parse/data/group/spec-file`, {
+      headers,
+    });
+  }
+
+  getRecordsGroupByParseFile(): Observable<any> {
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.get<any>(`${this.url}/parse/data/group/parse-file`, {
+      headers,
+    });
+  }
+
+  getRecordsGroupByUser(): Observable<any> {
+    const headers = this.authService.createAuthorizationHeader();
+
+    return this.http.get<any>(`${this.url}/parse/data/group/user`, {
+      headers,
+    });
   }
 }

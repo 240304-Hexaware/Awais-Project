@@ -1,0 +1,26 @@
+{
+  "task_Id": {
+    "startPos": 0,
+    "length": 10
+  },
+
+  "description": {
+    "startPos": 10,
+    "length": 30
+  },
+
+  "priority": {
+    "startPos": 40,
+    "length": 10
+  },
+
+  "due_Date": {
+    "startPos": 50,
+    "length": 10
+  },
+
+  "assign": {
+    "startPos": 60,
+    "length": 20
+  }
+}
