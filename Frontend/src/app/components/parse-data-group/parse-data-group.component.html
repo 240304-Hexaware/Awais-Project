@@ -1,0 +1,26 @@
+<div class="body">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li ngbNavItem>
+      <button ngbNavLink class="px-2 py-1">Group By Parse File</button>
+      <ng-template ngbNavContent>
+        <app-parse-file-grouping />
+      </ng-template>
+    </li>
+
+    <li ngbNavItem>
+      <button class="px-2 py-1" ngbNavLink>Group By Spec File</button>
+      <ng-template ngbNavContent>
+        <app-spec-grouping />
+      </ng-template>
+    </li>
+
+    <li ngbNavItem>
+      <button ngbNavLink class="px-2 py-1">Group By User</button>
+      <ng-template ngbNavContent>
+        <app-user-grouping />
+      </ng-template>
+    </li>
+  </ul>
+
+  <div [ngbNavOutlet]="nav" class="mt-2 mb-5"></div>
+</div>

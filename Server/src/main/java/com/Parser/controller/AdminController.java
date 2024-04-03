@@ -32,7 +32,6 @@ public class AdminController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Object> admin(@RequestHeader("Authorization") String token) {
 
-        System.out.println("Email " + jwtService.extractEmail(token.split(" ")[1]));
         return ResponseHandler.generateMessage("AdminController", HttpStatus.OK);
     }
 

@@ -1,0 +1,39 @@
+<div class="mt-5 border px-4 py-5" style="border-radius: 10px">
+  <div class="d-flex justify-content-between">
+    <div
+      ngbNav
+      #nav="ngbNav"
+      [(activeId)]="active"
+      class="nav-pills flex-column"
+      orientation="vertical"
+    >
+      @for (data of this.data; track data.id;) {
+
+      <ng-container ngbNavItem="{{ data?.name }}">
+        <button ngbNavLink>{{ data?.name }}</button>
+        <ng-template ngbNavContent>
+          <div class="tableContainer p-3 border" style="border-radius: 10px">
+            <div class="tableBody">
+              <table class="table table-fixed">
+                <tbody>
+                  @for (record of data.records; track $index) {
+                  <tr>
+                    <td>
+                      Record {{ $index + 1 }}:
+                      <pre>{{ record | json }}</pre>
+                    </td>
+                  </tr>
+
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+      }
+    </div>
+
+    <div [ngbNavOutlet]="nav" style="width: 70%; margin-right: 10%"></div>
+  </div>
+</div>

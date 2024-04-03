@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Parser.dto.GroupRecordDTO;
 import com.Parser.entity.ParseFile;
 import com.Parser.entity.Specification;
 import com.Parser.entity.ParsedRecord;
@@ -53,6 +54,8 @@ public class ParsedRecordService {
         task.setSpecificationName(specFileName);
         task.setSpecificationId(specFileId);
 
+        Map<String, Object> fields = new HashMap<String, Object>();
+
         for (Object key : specification.keySet()) {
 
             JSONObject inner = (JSONObject) specification.get(key);
@@ -62,12 +65,15 @@ public class ParsedRecordService {
 
             if (endPos <= line.length()) {
                 String fieldValue = line.substring((int) startPos, endPos).trim();
-                task.setField(key.toString(), fieldValue);
+                fields.put(key.toString(), fieldValue);
+
+                // task.setField(key.toString(), fieldValue);
 
             } else {
                 System.err.println("Field position out of bounds for: " + key);
             }
         }
+        task.setFields(fields);
 
         return task;
     }
@@ -87,6 +93,18 @@ public class ParsedRecordService {
 
     public Page<ParsedRecord> getRecords(Pageable pageable) {
         return recordRepository.findAll(pageable);
+    }
+
+    public List<GroupRecordDTO> getSpecFileGroupedRecords() {
+        return recordRepository.groupBySpecFile();
+    }
+
+    public List<GroupRecordDTO> getParseFileGroupedRecords() {
+        return recordRepository.groupByParseFile();
+    }
+
+    public List<GroupRecordDTO> getUserGroupedRecords() {
+        return recordRepository.groupByUser();
     }
 
     public Page<ParseFile> getParseFiles(Pageable pageable) {

@@ -3,28 +3,38 @@
   <div class="container-xxl">
     <ul ngbNav #nav="ngbNav" class="nav-tabs">
       <li ngbNavItem>
-        <button ngbNavLink>Parsed Data</button>
+        <button ngbNavLink><b>Parsed Grouped Data</b></button>
         <ng-template ngbNavContent>
-          <app-parse-data />
+          <app-parse-data-group />
         </ng-template>
       </li>
 
       <li ngbNavItem>
-        <button ngbNavLink>Parse File</button>
+        <button ngbNavLink><b>Parsed Data</b></button>
+        <ng-template ngbNavContent>
+          <!-- <app-parse-data /> -->
+        </ng-template>
+      </li>
+
+      <li ngbNavItem>
+        <button ngbNavLink><b>Parse File</b></button>
         <ng-template ngbNavContent>
           <app-parse-file />
         </ng-template>
       </li>
 
       <li ngbNavItem>
-        <button ngbNavLink>Specification File</button>
+        <button ngbNavLink><b>Specification File</b></button>
         <ng-template ngbNavContent>
           <app-spec-file />
         </ng-template>
       </li>
 
       <li class="ms-auto py-1 px-3">
-        <button class="btn btn-primary" (click)="openVerticallyCentered(formFiles)">
+        <button
+          class="btn btn-primary"
+          (click)="openVerticallyCentered(formFiles)"
+        >
           Add File
         </button>
       </li>
@@ -33,47 +43,83 @@
       <ng-template #formFiles let-modal>
         <div class="modal-header">
           <h4 class="modal-title">Upload Files</h4>
-          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+          ></button>
         </div>
 
         <form (ngSubmit)="onSubmit()">
           <div class="modal-body">
-
             <div class="mb-3">
               <label for="parseFile" class="form-label">Parse File</label>
-              <input class="form-control" (change)="onParseFile($event)" type="file" id="parseFile" accept=".txt" />
+              <input
+                class="form-control"
+                (change)="onParseFile($event)"
+                type="file"
+                id="parseFile"
+                accept=".txt"
+              />
             </div>
 
             <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" name="fileCheck" id="newFileCheck"
-                [(ngModel)]="this.specFileCheck">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="fileCheck"
+                id="newFileCheck"
+                [(ngModel)]="this.specFileCheck"
+              />
               <label class="form-check-label" for="newFileCheck">
                 Use Existing Spec File.
               </label>
             </div>
 
-            <div class="mb-3" *ngIf="!this.specFileCheck else specFiles">
-              <label for="specFile" class="form-label">Specification File</label>
-              <input class="form-control" (change)="onSpecFile($event)" type="file" id="specFile" accept=".json" />
+            <div class="mb-3" *ngIf="!this.specFileCheck; else specFiles">
+              <label for="specFile" class="form-label"
+                >Specification File</label
+              >
+              <input
+                class="form-control"
+                (change)="onSpecFile($event)"
+                type="file"
+                id="specFile"
+                accept=".json"
+              />
             </div>
 
             <ng-template #specFiles class="d-inline-block">
               <div>
-
-                <select class="form-select" [(ngModel)]="specFileSelected" name="selectFile">
+                <select
+                  class="form-select"
+                  [(ngModel)]="specFileSelected"
+                  name="selectFile"
+                >
                   <option selected disabled>Select Specification File</option>
-                  <option *ngFor="let spec of this.specList" [value]="spec.id">{{ spec.fileName }}</option>
+                  <option *ngFor="let spec of this.specList" [value]="spec.id">
+                    {{ spec.fileName }}
+                  </option>
                 </select>
               </div>
             </ng-template>
-
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="modal.close('Close click')"
+            >
               Close
             </button>
-            <button type="submit" class="btn btn-primary" (click)="modal.close('Close click')">Submit</button>
-
+            <button
+              type="submit"
+              class="btn btn-primary"
+              (click)="modal.close('Close click')"
+            >
+              Submit
+            </button>
           </div>
         </form>
       </ng-template>
