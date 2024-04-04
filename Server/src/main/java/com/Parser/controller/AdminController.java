@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Parser.response.ResponseHandler;
-import com.Parser.service.JwtService;
 import com.Parser.service.UserService;
 
 @RestController
@@ -21,11 +20,8 @@ public class AdminController {
 
     private UserService userService;
 
-    private JwtService jwtService;
-
-    public AdminController(UserService userService, JwtService jwtService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
-        this.jwtService = jwtService;
     }
 
     @GetMapping

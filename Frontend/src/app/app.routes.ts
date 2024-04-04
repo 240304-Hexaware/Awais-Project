@@ -5,12 +5,19 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ParseDataGroupComponent } from './components/parse-data-group/parse-data-group.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
     title: 'Dashboard page',
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'group/data',
+    component: ParseDataGroupComponent,
+    title: 'Grouped Data',
     canActivate: [AuthGuard],
   },
   {

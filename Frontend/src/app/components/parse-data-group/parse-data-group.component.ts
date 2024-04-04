@@ -3,11 +3,13 @@ import { ParseFileGroupingComponent } from '../parse-file-grouping/parse-file-gr
 import { SpecGroupingComponent } from '../spec-grouping/spec-grouping.component';
 import { UserGroupingComponent } from '../user-grouping/user-grouping.component';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-parse-data-group',
   standalone: true,
   imports: [
+    NavbarComponent,
     ParseFileGroupingComponent,
     SpecGroupingComponent,
     UserGroupingComponent,
